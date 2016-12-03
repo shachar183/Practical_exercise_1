@@ -112,10 +112,8 @@ public class WAVLTree {
 	   if (empty()){
 		   return null;
 	   }
-	   while(root.leftNode != null){
-		   root = root.leftNode;
-	   }
-	   return root.info;
+	   
+	   return getSmallestNode().info;
    }
 
    /**
@@ -124,15 +122,16 @@ public class WAVLTree {
     * Returns the info of the item with the largest key in the tree,
     * or null if the tree is empty.
     */
-   public String max(WAVLNode root)
+   public String max()
    {
+	   WAVLNode WAVL_tempNode = WAVL_root;
 	   if (empty()){
 		   return null;
 	   }
-	   while(root.rightNode != null){
-		   root = root.rightNode;
+	   while(WAVL_tempNode != WAVL_emptyNode){
+		   WAVL_tempNode = WAVL_tempNode.rightNode;
 	   }
-	   return root.info;
+	   return WAVL_tempNode.info;
    }
 
 
@@ -149,7 +148,7 @@ public class WAVLTree {
       	return new int[0]; // return empty array if empty.
       }
       
-	  int[] arr = new int[size]; // to be replaced by student code
+	  int[] arr = new int[size]; 
       WAVLNode WAVL_tempNode = getSmallestNode();
       int i = 0; // counter
       while(i < size)
@@ -185,7 +184,7 @@ public class WAVLTree {
         	return new String[0]; // return empty array if empty.
         }
         
-	  	String[] arr = new String[size]; // to be replaced by student code
+	  	String[] arr = new String[size]; 
         WAVLNode WAVL_tempNode = getSmallestNode();
         int i = 0; // counter
         while(i < size)
@@ -203,7 +202,7 @@ public class WAVLTree {
 	        	WAVL_tempNode=WAVL_tempNode.parentNode;
 	        }
   		}
-        return arr;                    // to be replaced by student code
+        return arr;                    
   }
   
   private WAVLNode getSmallestNode()
@@ -261,28 +260,65 @@ public class WAVLTree {
    }
    
    /**
-    * private static void rotateLeft(WAVLNode node)
+    * private static WAVLNode rotateLeft(WAVLNode node)
     *
     * performs a left rotation of the tree.
     *
-    * precondition: none
+    * precondition: receives the node which needs to be rotated down.
     * postcondition: none
     */
-   private static void rotateLeft(WAVLNode node)
+   private static WAVLNode rotateLeft(WAVLNode node)
    {
-	   
+	   WAVLNode pivotNode = node.rightNode;
+	   node.rightNode = pivotNode.leftNode;
+	   pivotNode.leftNode = node;
+	   return pivotNode;
    }
    
    /**
-    * private static void rotateRight(WAVLNode node)
+    * private static WAVLNode rotateRight(WAVLNode node)
     *
     * performs a right rotation of the tree.
     *
-    * precondition: none
+    * precondition: receives the node which needs to be rotated down.
     * postcondition: none
     */
-   private static void rotateRight(WAVLNode node)
+   private static WAVLNode rotateRight(WAVLNode node)
    {
+	   WAVLNode pivotNode = node.leftNode;
+	   node.leftNode = pivotNode.rightNode;
+	   pivotNode.rightNode = node;
+	   return pivotNode;
+   }
+   
+   /**
+    * private static WAVLNode doubleRotateLeftRight(WAVLNode node)
+    *
+    * performs a left rotation and then right rotation of the tree.
+    *
+    * precondition: receives the node which needs to be rotated down.
+    * postcondition: none
+    */
+   private static WAVLNode doubleRotateLeftRight(WAVLNode node)
+   {
+	   node.leftNode = rotateLeft(node.leftNode);
+	   WAVLNode pivotNode = rotateRight(node);
+	   return pivotNode;
+   }
+   
+   /**
+    * private static WAVLNode doubleRotateRightLeft(WAVLNode node)
+    *
+    * performs a right rotation and then left rotation of the tree.
+    *
+    * precondition: receives the node which needs to be rotated down.
+    * postcondition: none
+    */
+   private static WAVLNode doubleRotateRightLeft(WAVLNode node)
+   {
+	   node.rightNode = rotateRight(node.rightNode);
+	   WAVLNode pivotNode = rotateLeft(node);
+	   return pivotNode;
    }
    
   /**
