@@ -38,7 +38,7 @@ public class WAVLTree {
 	  }
   }
 
-  public WAVLNode searchNode(int k)
+  private  WAVLNode searchNode(int k)
   {
 	  if(empty()){
 		  return null;
@@ -54,7 +54,7 @@ public class WAVLTree {
   }
 
   
-  public WAVLNode searchInsertionNode(int k)
+  private WAVLNode searchInsertionNode(int k)
   {
 	  if(empty()){
 		  return null;
