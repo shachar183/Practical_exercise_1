@@ -90,24 +90,26 @@ public class WAVLTree {
 		   size++;
 		   return 0;
 	   }else{
+		   //finds desired insertion place
 		   WAVLNode WAVL_tempNode = searchInsertionNode(k);
 		   if (WAVL_tempNode.key == k)
 		   {
 			   return -1; // already exist.
 		   }else{
 			   size++;
+			   // tempNode would be left child
 			   if(WAVL_tempNode.key<k)
 			   {
 				   	WAVL_tempNode.leftNode = new WAVLNode(WAVL_tempNode,WAVL_emptyNode,
 				   			WAVL_emptyNode,1,k,i);	
-				   	if (WAVL_tempNode.rightNode == WAVL_emptyNode) // if insertionNode was a leaf
+				   	if (WAVL_tempNode.rightNode == WAVL_emptyNode) // if tempNode was a leaf
 				   	{
 				   		return promote(WAVL_tempNode);
 				   	}
-			   }else{
+			   }else{ // tempNode would be right child
 				   WAVL_tempNode.rightNode = new WAVLNode(WAVL_tempNode,WAVL_emptyNode,
 				   			WAVL_emptyNode,1,k,i);
-				   if (WAVL_tempNode.leftNode == WAVL_emptyNode) // if insertionNode was a leaf
+				   if (WAVL_tempNode.leftNode == WAVL_emptyNode) // if tempNode was a leaf
 				   	{
 					   return promote(WAVL_tempNode);
 				   	}
@@ -127,36 +129,440 @@ public class WAVLTree {
    */
    public int delete(int k)
    {
-	   if(empty()){
+	   int rebalancingCounter = 0;
+	   WAVLNode deleteNode = searchNode(k);
+	   if(deleteNode.equals(null)){
 		   return -1;
 	   }else{
-		   int rebalancingCounter = 0;
-		   WAVLNode deleteNode = searchNode(k);
-		   if(deleteNode.equals(null)){
-			   return -1;
+		   if(size == 1){
+			   WAVL_root = WAVL_emptyNode;
+			   size --;
 		   }else{
 			   //checking if the node has a father.
-			   if(size == 1){
-				   deleteNode = WAVL_emptyNode;
-				   size --;
-			   }else{
-				   WAVLNode deleteNodeParent = deleteNode.parentNode;
-				   // deleteNode is a left son.
-				   if(deleteNode.key < deleteNodeParent.key){
-					   if(deleteNode.rankDiff){
-						   
+			   WAVLNode deleteNodeParent = deleteNode.parentNode;
+			   
+			   // TODO case 0: deleteNode parent is null.
+			   
+			   // TODO case x: deleteNode has two children. wait for answer in forum.
+			   
+			   // case 1: deleteNode is a leaf and we don't need to demote its father.
+			   if(isLeaf(deleteNode) && deleteNode.rankDiff == 1){
+				   if(deleteNode.key < deleteNodeParent.key){ //is left child
+					   if(deleteNodeParent.rightNode.rankDiff == 1 && deleteNodeParent.rightNode != WAVL_emptyNode){
+						   deleteNodeParent.leftNode = WAVL_emptyNode;
+						   size --;
+						   return rebalancingCounter;
 					   }
-				   }else{ // deleteNode is a left son.
-					   
+				   }else{ // deleteNode is right child
+					   if(deleteNodeParent.leftNode.rankDiff == 1 && deleteNodeParent.leftNode != WAVL_emptyNode){
+						   deleteNodeParent.rightNode = WAVL_emptyNode;
+						   size --;
+						   return rebalancingCounter;
+					   }
+				   }
+			   }
+			   
+			   // case2 : parent's other child is external leaf and deleteNode is leaf
+			   if(isLeaf(deleteNode)){
+				   if(deleteNode.key < deleteNodeParent.key){ //is left child
+					   if(deleteNodeParent.rightNode == WAVL_emptyNode){
+						   deleteNodeParent.leftNode = WAVL_emptyNode;
+						   size --;
+						   return demote(deleteNodeParent,rebalancingCounter);
+					   }
+				   }else{ // deleteNode is right child
+					   if(deleteNodeParent.leftNode == WAVL_emptyNode){
+						   deleteNodeParent.rightNode = WAVL_emptyNode;
+						   size --;
+						   return demote(deleteNodeParent,rebalancingCounter);
+					   }
+				   }
+			   }
+			   
+			   // case 3: two leaves with rank difference two.
+			   if(isLeaf(deleteNodeParent.leftNode) && isLeaf(deleteNodeParent.rightNode) 
+					   && deleteNodeParent.rightNode.rankDiff == 2 && deleteNodeParent.leftNode.rankDiff == 2){
+				   
+				   if(deleteNode.key < deleteNodeParent.key){ //is left child
+					   deleteNodeParent.leftNode = WAVL_emptyNode;
+					   size --;
+					   deleteNodeParent.rightNode.rankDiff = 1;
+					   return demote(deleteNodeParent,rebalancingCounter);
+				   }else{ // deleteNode is right child
+					   deleteNodeParent.rightNode = WAVL_emptyNode;
+					   size --;
+					   deleteNodeParent.leftNode.rankDiff = 1;
+					   return demote(deleteNodeParent,rebalancingCounter);
+				   }
+			   }
+				   
+			   // case 4: one is a leaf and the other child's children both has rank differences of two.
+			   if(isLeaf(deleteNode)){
+				   if(deleteNode.key < deleteNodeParent.key){ //is left child
+					   if(deleteNodeParent.rightNode.leftNode.rankDiff == 2 && deleteNodeParent.rightNode.rightNode.rankDiff ==2){
+						   deleteNodeParent.leftNode = WAVL_emptyNode;
+						   size --;
+						   // demoting right node's rank
+						   deleteNodeParent.rightNode.leftNode.rankDiff = 1;
+						   deleteNodeParent.rightNode.rightNode.rankDiff = 1;
+						   rebalancingCounter ++;
+						   return demote(deleteNodeParent, rebalancingCounter);
+					   }
+				   }else{ // deleteNode is right child
+					   if(deleteNodeParent.leftNode.leftNode.rankDiff == 2 && deleteNodeParent.leftNode.rightNode.rankDiff ==2){
+						   deleteNodeParent.rightNode = WAVL_emptyNode;
+						   size --;
+						   // demoting right node's rank
+						   deleteNodeParent.leftNode.leftNode.rankDiff = 1;
+						   deleteNodeParent.leftNode.rightNode.rankDiff = 1;
+						   rebalancingCounter ++;
+						   return demote(deleteNodeParent, rebalancingCounter);
+					   }
+				   }
+			   }
+
+			   // case 5: one is a leaf and the other child's external child has rank difference of one and the internal child has rank difference of one or two.
+			   if(isLeaf(deleteNode)){
+				   if(deleteNode.key < deleteNodeParent.key){ //is left child
+					   if(deleteNodeParent.rightNode.rightNode.rankDiff == 1 && deleteNodeParent.rightNode.rightNode != WAVL_emptyNode){
+						   deleteNodeParent.leftNode = WAVL_emptyNode;
+						   WAVLNode topNode = rotateLeft(deleteNodeParent);
+						   topNode.rankDiff = topNode.leftNode.rankDiff;
+						   topNode.leftNode.rankDiff = 1;
+						   topNode.rightNode.rankDiff = 2;
+						   size --;
+						   return rebalancingCounter + 1; 
+					   }
+				   }else{ // deleteNode is right child
+					   if(deleteNodeParent.leftNode.leftNode.rankDiff == 1 && deleteNodeParent.leftNode.leftNode != WAVL_emptyNode){
+						   deleteNodeParent.rightNode = WAVL_emptyNode;
+						   WAVLNode topNode = rotateRight(deleteNodeParent);
+						   topNode.rankDiff = topNode.rightNode.rankDiff;
+						   topNode.rightNode.rankDiff = 1;
+						   topNode.leftNode.rankDiff = 2;
+						   size --;
+						   return rebalancingCounter + 1; 
+					   }
+				   }
+			   }
+			   
+			   // case 6: one is a leaf and the other child's external child has rank difference of two or an external leaf and the internal child has rank difference of one.
+			   
+			   if(isLeaf(deleteNode)){
+				   if(deleteNode.key < deleteNodeParent.key){ //is left child
+					   if((deleteNodeParent.rightNode.rightNode.rankDiff == 2 || deleteNodeParent.rightNode.rightNode == WAVL_emptyNode)
+							   && deleteNodeParent.rightNode.leftNode.rankDiff == 1){
+						   
+						   deleteNodeParent.leftNode = WAVL_emptyNode;
+						   WAVLNode topNode = doubleRotateRightLeft(deleteNodeParent);
+						   topNode.rankDiff = topNode.leftNode.rankDiff;
+						   topNode.leftNode.rankDiff = 2;
+						   topNode.rightNode.rankDiff = 2;
+						   size --;
+						   return rebalancingCounter + 2; 
+					   }
+				   }else{ // deleteNode is right child
+					   if((deleteNodeParent.leftNode.leftNode.rankDiff == 2 || deleteNodeParent.leftNode.leftNode == WAVL_emptyNode)
+							   && deleteNodeParent.leftNode.rightNode.rankDiff == 1){
+						   
+						   deleteNodeParent.rightNode = WAVL_emptyNode;
+						   WAVLNode topNode = doubleRotateLeftRight(deleteNodeParent);
+						   topNode.rankDiff = topNode.rightNode.rankDiff;
+						   topNode.rightNode.rankDiff = 2;
+						   topNode.leftNode.rankDiff = 2;
+						   size --;
+						   return rebalancingCounter + 2; 
+					   }
+				   }
+			   }
+			   
+			   // case 7: deleteNode isn't a leaf and has one leaf child and one external leaf child. deleteNode has rank difference of one.
+			   
+			   if(!isLeaf(deleteNode) && deleteNode.rankDiff == 1){
+				   if((isLeaf(deleteNode.leftNode) && deleteNode.rightNode == WAVL_emptyNode)){
+					   if(deleteNode.key < deleteNodeParent.key){ //is left child
+						   deleteNodeParent.leftNode = deleteNode.leftNode;
+						   size --;
+						   return rebalancingCounter;
+					   }else{ //is right child
+						   deleteNodeParent.rightNode = deleteNode.leftNode;
+						   size --;
+						   return rebalancingCounter;
+					   }
+				   }else if ((isLeaf(deleteNode.rightNode) && deleteNode.leftNode == WAVL_emptyNode)){
+					   if(deleteNode.key < deleteNodeParent.key){ //is left child
+						   deleteNodeParent.leftNode = deleteNode.rightNode;
+						   size --;
+						   return rebalancingCounter;
+					   }else{ //is right child
+						   deleteNodeParent.rightNode = deleteNode.rightNode;
+						   size --;
+						   return rebalancingCounter;
+					   }
+				   }
+			   }
+			   
+			   // case 8: deleteNode isn't a leaf and has one leaf child and one external leaf child. deleteNode has rank difference of two.
+			   
+			   if(!isLeaf(deleteNode) && deleteNode.rankDiff == 2){
+				   if((isLeaf(deleteNode.leftNode) && deleteNode.rightNode == WAVL_emptyNode)){
+					   if(deleteNode.key < deleteNodeParent.key){ //is left child
+						   if(deleteNodeParent.rightNode.rankDiff == 2){
+							   deleteNodeParent.leftNode = deleteNode.leftNode;
+							   size --;
+							   return demote(deleteNodeParent, rebalancingCounter);
+						   }
+					   }else{ //is right child
+						   if(deleteNodeParent.leftNode.rankDiff == 2){
+							   deleteNodeParent.rightNode = deleteNode.leftNode;
+							   size --;
+							   return demote(deleteNodeParent, rebalancingCounter);
+						   }
+					   }
+				   }else if ((isLeaf(deleteNode.rightNode) && deleteNode.leftNode == WAVL_emptyNode)){
+					   if(deleteNode.key < deleteNodeParent.key){ //is left child
+						   if(deleteNodeParent.rightNode.rankDiff == 2){
+							   deleteNodeParent.leftNode = deleteNode.rightNode;
+							   size --;
+							   return demote(deleteNodeParent, rebalancingCounter);
+						   }
+					   }else{ //is right child
+						   if(deleteNodeParent.leftNode.rankDiff == 2){
+							   deleteNodeParent.rightNode = deleteNode.rightNode;
+							   size --;
+							   return demote(deleteNodeParent, rebalancingCounter);
+						   }
+					   }
+				   }
+			   }
+			   
+			   // case 9: one is a leaf and the other child's children both has rank differences of two.
+			   if(!isLeaf(deleteNode) && deleteNode.rankDiff == 2){
+				   if((isLeaf(deleteNode.leftNode) && deleteNode.rightNode == WAVL_emptyNode)){
+					   if(deleteNode.key < deleteNodeParent.key){ //is left child
+						   if(deleteNodeParent.rightNode.rankDiff == 1){
+							   if(deleteNodeParent.rightNode.leftNode.rankDiff == 2 && deleteNodeParent.rightNode.rightNode.rankDiff ==2){
+								   deleteNodeParent.leftNode = deleteNode.leftNode;
+								   size --;
+								   // demoting right node's rank
+								   deleteNodeParent.rightNode.leftNode.rankDiff = 1;
+								   deleteNodeParent.rightNode.rightNode.rankDiff = 1;
+								   rebalancingCounter ++;
+								   return demote(deleteNodeParent, rebalancingCounter);
+							   }
+						   }
+					   }else{ //is right child
+						   if(deleteNodeParent.leftNode.rankDiff == 1){
+							   if(deleteNodeParent.rightNode.leftNode.rankDiff == 2 && deleteNodeParent.rightNode.rightNode.rankDiff ==2){
+								   deleteNodeParent.rightNode = deleteNode.leftNode;
+								   size --;
+								   // demoting right node's rank
+								   deleteNodeParent.leftNode.leftNode.rankDiff = 1;
+								   deleteNodeParent.leftNode.rightNode.rankDiff = 1;
+								   rebalancingCounter ++;
+								   return demote(deleteNodeParent, rebalancingCounter);
+							   }
+						   }
+					   }
+				   }else if ((isLeaf(deleteNode.rightNode) && deleteNode.leftNode == WAVL_emptyNode)){
+					   if(deleteNode.key < deleteNodeParent.key){ //is left child
+						   if(deleteNodeParent.rightNode.rankDiff == 1){
+							   if(deleteNodeParent.rightNode.leftNode.rankDiff == 2 && deleteNodeParent.rightNode.rightNode.rankDiff ==2){
+								   deleteNodeParent.leftNode = deleteNode.rightNode;
+								   size --;
+								   // demoting right node's rank
+								   deleteNodeParent.rightNode.leftNode.rankDiff = 1;
+								   deleteNodeParent.rightNode.rightNode.rankDiff = 1;
+								   rebalancingCounter ++;
+								   return demote(deleteNodeParent, rebalancingCounter);
+							   }
+						   }
+					   }else{ //is right child
+						   if(deleteNodeParent.leftNode.rankDiff == 1){
+							   if(deleteNodeParent.rightNode.leftNode.rankDiff == 2 && deleteNodeParent.rightNode.rightNode.rankDiff ==2){
+								   deleteNodeParent.rightNode = deleteNode.rightNode;
+								   size --;
+								   // demoting right node's rank
+								   deleteNodeParent.leftNode.leftNode.rankDiff = 1;
+								   deleteNodeParent.leftNode.rightNode.rankDiff = 1;
+								   rebalancingCounter ++;
+								   return demote(deleteNodeParent, rebalancingCounter);
+							   }
+						   }
+					   }
+				   }
+			   }
+
+			   // case 10: one is a leaf and the other child's external child has rank difference of one and the internal child has rank difference of one or two.
+			   if(!isLeaf(deleteNode) && deleteNode.rankDiff == 2){
+				   if((isLeaf(deleteNode.leftNode) && deleteNode.rightNode == WAVL_emptyNode)){
+					   if(deleteNode.key < deleteNodeParent.key){ //is left child
+						   if(deleteNodeParent.rightNode.rankDiff == 1){
+							   if(deleteNodeParent.rightNode.rightNode != WAVL_emptyNode && deleteNodeParent.rightNode.rightNode.rankDiff ==1){
+								   deleteNodeParent.leftNode = deleteNode.leftNode;
+								   size --;
+								   // demoting right node's rank
+								   WAVLNode topNode = rotateLeft(deleteNodeParent);
+								   topNode.rankDiff = topNode.leftNode.rankDiff;
+								   topNode.leftNode.rankDiff = 1;
+								   topNode.rightNode.rankDiff = 2;
+								   topNode.leftNode.leftNode.rankDiff = 1;
+								   return rebalancingCounter + 1; 
+							   }
+						   }
+					   }else{ //is right child
+						   if(deleteNodeParent.leftNode.rankDiff == 1){
+							   if(deleteNodeParent.rightNode.leftNode.rankDiff == 2 && deleteNodeParent.rightNode.rightNode.rankDiff ==2){
+								   deleteNodeParent.rightNode = deleteNode.leftNode;
+								   size --;
+								   // demoting right node's rank
+								   WAVLNode topNode = rotateRight(deleteNodeParent);
+								   topNode.rankDiff = topNode.rightNode.rankDiff;
+								   topNode.rightNode.rankDiff = 1;
+								   topNode.leftNode.rankDiff = 2;
+								   topNode.rightNode.rightNode.rankDiff = 1;
+								   return rebalancingCounter + 1; 
+							   }
+						   }
+					   }
+				   }else if ((isLeaf(deleteNode.rightNode) && deleteNode.leftNode == WAVL_emptyNode)){
+					   if(deleteNode.key < deleteNodeParent.key){ //is left child
+						   if(deleteNodeParent.rightNode.rankDiff == 1){
+							   if(deleteNodeParent.rightNode.leftNode.rankDiff == 2 && deleteNodeParent.rightNode.rightNode.rankDiff ==2){
+								   deleteNodeParent.leftNode = deleteNode.rightNode;
+								   size --;
+								   // demoting right node's rank
+								   WAVLNode topNode = rotateLeft(deleteNodeParent);
+								   topNode.rankDiff = topNode.leftNode.rankDiff;
+								   topNode.leftNode.rankDiff = 1;
+								   topNode.rightNode.rankDiff = 2;
+								   topNode.leftNode.leftNode.rankDiff = 1;
+								   return rebalancingCounter + 1; 
+							   }
+						   }
+					   }else{ //is right child
+						   if(deleteNodeParent.leftNode.rankDiff == 1){
+							   if(deleteNodeParent.rightNode.leftNode.rankDiff == 2 && deleteNodeParent.rightNode.rightNode.rankDiff ==2){
+								   deleteNodeParent.rightNode = deleteNode.rightNode;
+								   size --;
+								   // demoting right node's rank
+								   WAVLNode topNode = rotateRight(deleteNodeParent);
+								   topNode.rankDiff = topNode.rightNode.rankDiff;
+								   topNode.rightNode.rankDiff = 1;
+								   topNode.leftNode.rankDiff = 2;
+								   topNode.rightNode.rightNode.rankDiff = 1;
+								   return rebalancingCounter + 1; 
+							   }
+						   }
+					   }
+				   }
+			   }
+			  
+			   
+			   // case 11: one is a leaf and the other child's external child has rank difference of two or an external leaf and the internal child has rank difference of one.
+			   
+			   if(!isLeaf(deleteNode) && deleteNode.rankDiff == 2){
+				   if((isLeaf(deleteNode.leftNode) && deleteNode.rightNode == WAVL_emptyNode)){
+					   if(deleteNode.key < deleteNodeParent.key){ //is left child
+						   if(deleteNodeParent.rightNode.rankDiff == 1){
+							   if(deleteNodeParent.rightNode.rightNode.rankDiff == 2 && deleteNodeParent.rightNode.leftNode.rankDiff == 1){
+								   deleteNodeParent.leftNode = deleteNode.leftNode;
+								   size --;
+								   // demoting right node's rank
+								   WAVLNode topNode = doubleRotateRightLeft(deleteNodeParent);
+								   topNode.rankDiff = topNode.leftNode.rankDiff;
+								   topNode.leftNode.rankDiff = 2;
+								   topNode.rightNode.rankDiff = 2;
+								   return rebalancingCounter + 2;  
+							   }
+						   }
+					   }else{ //is right child
+						   if(deleteNodeParent.leftNode.rankDiff == 1){
+							   if(deleteNodeParent.leftNode.rightNode.rankDiff == 2 && deleteNodeParent.leftNode.leftNode.rankDiff == 1){
+								   deleteNodeParent.rightNode = deleteNode.leftNode;
+								   size --;
+								   // demoting right node's rank
+								   WAVLNode topNode = doubleRotateLeftRight(deleteNodeParent);
+								   topNode.rankDiff = topNode.rightNode.rankDiff;
+								   topNode.leftNode.rankDiff = 2;
+								   topNode.rightNode.rankDiff = 2;
+								   return rebalancingCounter + 2;  
+							   }
+						   }
+					   }
+				   }else if ((isLeaf(deleteNode.rightNode) && deleteNode.leftNode == WAVL_emptyNode)){
+					   if(deleteNode.key < deleteNodeParent.key){ //is left child
+						   if(deleteNodeParent.rightNode.rankDiff == 1){
+							   if(deleteNodeParent.rightNode.rightNode.rankDiff == 2 && deleteNodeParent.rightNode.leftNode.rankDiff == 1){
+								   deleteNodeParent.leftNode = deleteNode.rightNode;
+								   size --;
+								   // demoting right node's rank
+								   WAVLNode topNode = doubleRotateRightLeft(deleteNodeParent);
+								   topNode.rankDiff = topNode.leftNode.rankDiff;
+								   topNode.leftNode.rankDiff = 2;
+								   topNode.rightNode.rankDiff = 2;
+								   return rebalancingCounter + 2; 
+							   }
+						   }
+					   }else{ //is right child
+						   if(deleteNodeParent.leftNode.rankDiff == 1){
+							   if(deleteNodeParent.leftNode.rightNode.rankDiff == 2 && deleteNodeParent.leftNode.leftNode.rankDiff == 1){
+								   deleteNodeParent.rightNode = deleteNode.rightNode;
+								   size --;
+								   // demoting right node's rank
+								   WAVLNode topNode = doubleRotateLeftRight(deleteNodeParent);
+								   topNode.rankDiff = topNode.rightNode.rankDiff;
+								   topNode.leftNode.rankDiff = 2;
+								   topNode.rightNode.rankDiff = 2;
+								   return rebalancingCounter + 2;   
+							   }
+						   }
+					   }
+				   }
+			   }
+			   
+			 			   
+			   
+			   
+			   
+			   
+			   
+			   
+			   
+			   
+			   
+			   
+			   
+			   // deleteNode is a left son.
+			   if(deleteNode.key < deleteNodeParent.key){
+				   // deleteNode is a leaf and only child
+				   if(isLeaf(deleteNode) && (deleteNodeParent.rightNode == WAVL_emptyNode)){
+					   deleteNodeParent.leftNode = WAVL_emptyNode;
+					   size --;
+					   rebalancingCounter += demote(deleteNodeParent, rebalancingCounter);
+				   }
+			   }else{ // deleteNode is a right son.
+				   // deleteNode is a leaf and only child
+				   if(isLeaf(deleteNode) && (deleteNodeParent.leftNode == WAVL_emptyNode)){
+					   deleteNodeParent.rightNode = WAVL_emptyNode;
+					   size --;
+					   rebalancingCounter += demote(deleteNodeParent, rebalancingCounter);
 				   }
 			   }
 		   }
 	   }
 	   
-	   return 0;
+	   return rebalancingCounter;
    
    }
-
+   /** 
+    * 
+    * @param node
+    * @return if the node is a leaf.
+    */
+   public boolean isLeaf(WAVLNode node){
+	   return node.rightNode == node.leftNode;
+   }
    /**
     * public String min()
     *
@@ -311,76 +717,76 @@ public class WAVLTree {
     * precondition: none
     * postcondition: none
     */
-   private int promote(WAVLNode WAVL_Node)
+   private int promote(WAVLNode node)
    {
 	   int rebalanceCounter = 0;
-	   while(WAVL_Node != WAVL_root){ // "because in the end it doesn't even matter"
-		   if(WAVL_Node.rankDiff == 2)
+	   while(node != WAVL_root){ // "because in the end it doesn't even matter"
+		   if(node.rankDiff == 2)
 		   {
-			   WAVL_Node.rankDiff = 1;
+			   node.rankDiff = 1;
 			   return rebalanceCounter + 1;
 		   }else{
-			   if(WAVL_Node==WAVL_Node.parentNode.leftNode) // is the left node
+			   if(node==node.parentNode.leftNode) // is the left node
 			   {
-				   if((WAVL_Node.parentNode.rightNode.rankDiff == 1) && (WAVL_Node.parentNode.rightNode != WAVL_emptyNode))
+				   if((node.parentNode.rightNode.rankDiff == 1) && (node.parentNode.rightNode != WAVL_emptyNode))
 				   {
-					   WAVL_Node.parentNode.rightNode.rankDiff = 2;
-					   WAVL_Node = WAVL_Node.parentNode;
+					   node.parentNode.rightNode.rankDiff = 2;
+					   node = node.parentNode;
 					   rebalanceCounter++;
 				   }else{//need to be rotated
-					   if((WAVL_Node.rightNode.rankDiff == 2) || (WAVL_Node.rightNode == WAVL_emptyNode))//need single rotation
+					   if((node.rightNode.rankDiff == 2) || (node.rightNode == WAVL_emptyNode))//need single rotation
 					   {
-						   rotateRight(WAVL_Node.parentNode); // WAVL_Node became the parent now
+						   rotateRight(node.parentNode); // WAVL_Node became the parent now
 						   rebalanceCounter++;
 						   
 						   //fix ranks:
-						   WAVL_Node.rankDiff = WAVL_Node.rightNode.rankDiff;
-						   WAVL_Node.rightNode.rankDiff = 1;
-						   WAVL_Node.rightNode.rightNode.rankDiff = 1;
-						   WAVL_Node.leftNode.rightNode.rankDiff = 1;
+						   node.rankDiff = node.rightNode.rankDiff;
+						   node.rightNode.rankDiff = 1;
+						   node.rightNode.rightNode.rankDiff = 1;
+						   node.leftNode.rightNode.rankDiff = 1;
 						   
 						   return rebalanceCounter;
 					   }else{//need double rotation
-						   WAVL_Node = doubleRotateLeftRight(WAVL_Node.parentNode); // WAVL_Node.rightNode became the parent now
+						   node = doubleRotateLeftRight(node.parentNode); // WAVL_Node.rightNode became the parent now
 						   rebalanceCounter++;
 						   
 						   //fix ranks:
-						   WAVL_Node.rankDiff = WAVL_Node.rightNode.rankDiff;
-						   WAVL_Node.rightNode.rankDiff = 1;
-						   WAVL_Node.rightNode.rightNode.rankDiff = 1;
-						   WAVL_Node.leftNode.leftNode.rankDiff = 1;
+						   node.rankDiff = node.rightNode.rankDiff;
+						   node.rightNode.rankDiff = 1;
+						   node.rightNode.rightNode.rankDiff = 1;
+						   node.leftNode.leftNode.rankDiff = 1;
 						   
 						   return rebalanceCounter;
 					   }
 				   }
 			   }else{ // is the right node
-				   if((WAVL_Node.parentNode.leftNode.rankDiff == 1) && (WAVL_Node.parentNode.leftNode != WAVL_emptyNode))
+				   if((node.parentNode.leftNode.rankDiff == 1) && (node.parentNode.leftNode != WAVL_emptyNode))
 				   {
-					   WAVL_Node.parentNode.leftNode.rankDiff = 2;
-					   WAVL_Node = WAVL_Node.parentNode;
+					   node.parentNode.leftNode.rankDiff = 2;
+					   node = node.parentNode;
 					   rebalanceCounter++;
 				   }else{//need to be rotated
-					   if((WAVL_Node.leftNode.rankDiff == 2) || (WAVL_Node.leftNode == WAVL_emptyNode))//need single rotation
+					   if((node.leftNode.rankDiff == 2) || (node.leftNode == WAVL_emptyNode))//need single rotation
 					   {
-						   rotateLeft(WAVL_Node.parentNode); // WAVL_Node became the parent now
+						   rotateLeft(node.parentNode); // WAVL_Node became the parent now
 						   rebalanceCounter++;
 						   
 						   //fix ranks:
-						   WAVL_Node.rankDiff = WAVL_Node.leftNode.rankDiff;
-						   WAVL_Node.leftNode.rankDiff = 1;
-						   WAVL_Node.leftNode.leftNode.rankDiff = 1;
-						   WAVL_Node.rightNode.leftNode.rankDiff = 1;
+						   node.rankDiff = node.leftNode.rankDiff;
+						   node.leftNode.rankDiff = 1;
+						   node.leftNode.leftNode.rankDiff = 1;
+						   node.rightNode.leftNode.rankDiff = 1;
 						   
 						   return rebalanceCounter;
 					   }else{//need double rotation
-						   WAVL_Node = doubleRotateRightLeft(WAVL_Node.parentNode); // WAVL_Node.leftNode became the parent now
+						   node = doubleRotateRightLeft(node.parentNode); // WAVL_Node.leftNode became the parent now
 						   rebalanceCounter++;
 						   
 						   //fix ranks:
-						   WAVL_Node.rankDiff = WAVL_Node.leftNode.rankDiff;
-						   WAVL_Node.leftNode.rankDiff = 1;
-						   WAVL_Node.leftNode.leftNode.rankDiff = 1;
-						   WAVL_Node.rightNode.rightNode.rankDiff = 1;
+						   node.rankDiff = node.leftNode.rankDiff;
+						   node.leftNode.rankDiff = 1;
+						   node.leftNode.leftNode.rankDiff = 1;
+						   node.rightNode.rightNode.rankDiff = 1;
 						   
 						   return rebalanceCounter;
 					   }
@@ -399,8 +805,31 @@ public class WAVLTree {
     * precondition: none
     * postcondition: none
     */
-   private static int demote(WAVLNode node , Integer rebalancingCounter)
+   private int demote(WAVLNode node , int rebalancingCounter)
    {
+	   // checking if there's a need for further demotes or for rotations.
+	   // if node is a leaf
+	   // TODO 
+	   if (isLeaf(node)){
+		   node.rankDiff += 1;
+		   rebalancingCounter += 1;
+		   if(node.rankDiff == 2){
+			   return rebalancingCounter;
+		   }else{ // need to further demote
+			   
+		   }
+	   }
+	   if(node.rankDiff == 2){
+		   // parent has no sons
+		   if(node.leftNode)
+		   return rebalancingCounter;
+	   }else if(node.rankDiff ==3){
+		   
+		   
+	   }
+	   
+	   
+	   
 	   return 0;
    }
    
