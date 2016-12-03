@@ -10,7 +10,7 @@
 public class WAVLTree {
 	final WAVLNode WAVL_emptyNode = new WAVLNode();
 	private WAVLNode WAVL_root = WAVL_emptyNode;
-	int size = 0;
+	private int size = 0;
   /**
    * public boolean empty()
    *
@@ -29,7 +29,19 @@ public class WAVLTree {
    */
   public String search(int k)
   {
-	return "42";  // to be replaced by student code
+	  WAVLNode WAVL_tempNode = WAVL_root;
+	  while (WAVL_tempNode != WAVL_emptyNode)
+	  {
+		  if(WAVL_tempNode.key>k)
+		  {
+			  WAVL_tempNode=WAVL_tempNode.rightNode;
+		  }else if(WAVL_tempNode.key<k){
+			  WAVL_tempNode=WAVL_tempNode.leftNode;
+		  }else{
+			  return WAVL_tempNode.info;
+		  }
+	  }
+	  return null;
   }
 
   /**
@@ -87,8 +99,8 @@ public class WAVLTree {
    */
   public int[] keysToArray()
   {
-        int[] arr = new int[42]; // to be replaced by student code
-        return arr;              // to be replaced by student code
+        int[] arr = new int[42];
+        return arr;
   }
 
   /**
@@ -100,10 +112,49 @@ public class WAVLTree {
    */
   public String[] infoToArray()
   {
-        String[] arr = new String[42]; // to be replaced by student code
+        if(empty())
+        {
+        	return new String[0]; // return empty array if empty.
+        }
+        
+	  	String[] arr = new String[size]; // to be replaced by student code
+        WAVLNode WAVL_tempNode = getSmallestNode();
+        int i = 0; // counter
+        while(i < size)
+        {
+	        arr[i]=WAVL_tempNode.info;
+	        i++;
+	        if(WAVL_tempNode.rightNode!=WAVL_emptyNode)
+	        {
+	        	WAVL_tempNode=WAVL_tempNode.rightNode;
+	        	while(WAVL_tempNode.leftNode!=WAVL_emptyNode)
+	        	{
+	        		WAVL_tempNode=WAVL_tempNode.leftNode;
+	        	}
+	        }else if(WAVL_tempNode.parentNode!=null){
+	        	WAVL_tempNode=WAVL_tempNode.parentNode;
+	        }else{
+	        	break;
+	        }
+  		}
         return arr;                    // to be replaced by student code
   }
-
+  
+  private WAVLNode getSmallestNode()
+  {
+	  if(!empty())
+	  {
+		  WAVLNode WAVL_tempNode = WAVL_root;
+		  while(WAVL_tempNode.leftNode!=WAVL_emptyNode)
+		  {
+			  WAVL_tempNode=WAVL_tempNode.leftNode;
+		  }
+		  return WAVL_tempNode;
+	  }else{
+		  return WAVL_emptyNode; 
+	  }
+  }
+  
    /**
     * public int size()
     *
@@ -178,12 +229,12 @@ public class WAVLTree {
    * This is an example which can be deleted if no such classes are necessary.
    */
   public class WAVLNode{
-	  WAVLNode ParentNode;
-	  WAVLNode LeftNode;
-	  WAVLNode RightNode;
+	  WAVLNode parentNode;
+	  WAVLNode leftNode;
+	  WAVLNode rightNode;
 	  boolean rankDiff;
 	  int key;
-	  String Info;  
+	  String info;  
   }
 
   
