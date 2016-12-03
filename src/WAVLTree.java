@@ -127,10 +127,10 @@ public class WAVLTree {
    */
    public int delete(int k)
    {
+	   int rebalancingCounter = 0;
 	   if(empty()){
 		   return -1;
 	   }else{
-		   int rebalancingCounter = 0;
 		   WAVLNode deleteNode = searchNode(k);
 		   if(deleteNode.equals(null)){
 			   return -1;
@@ -141,22 +141,44 @@ public class WAVLTree {
 				   size --;
 			   }else{
 				   WAVLNode deleteNodeParent = deleteNode.parentNode;
+				   // deleteNode is a leaf and we don't need to demote its father.
+				   if(isLeaf(deleteNode) && deleteNode.rankDiff == 1){
+					   deleteNodeParent.leftNode = WAVL_emptyNode;
+					   size --;
+					   return rebalancingCounter + 1;
+				   }
+
 				   // deleteNode is a left son.
 				   if(deleteNode.key < deleteNodeParent.key){
-					   if(deleteNode.rankDiff){
-						   
+					   // deleteNode is a leaf and only child
+					   if(isLeaf(deleteNode) && (deleteNodeParent.rightNode == WAVL_emptyNode)){
+						   deleteNodeParent.leftNode = WAVL_emptyNode;
+						   size --;
+						   rebalancingCounter += demote(deleteNodeParent, rebalancingCounter);
 					   }
-				   }else{ // deleteNode is a left son.
-					   
+				   }else{ // deleteNode is a right son.
+					   // deleteNode is a leaf and only child
+					   if(isLeaf(deleteNode) && (deleteNodeParent.leftNode == WAVL_emptyNode)){
+						   deleteNodeParent.rightNode = WAVL_emptyNode;
+						   size --;
+						   rebalancingCounter += demote(deleteNodeParent, rebalancingCounter);
+					   }
 				   }
 			   }
 		   }
 	   }
 	   
-	   return 0;
+	   return rebalancingCounter;
    
    }
-
+   /** 
+    * 
+    * @param node
+    * @return if the node is a leaf.
+    */
+   public boolean isLeaf(WAVLNode node){
+	   return node.rightNode == node.leftNode;
+   }
    /**
     * public String min()
     *
@@ -325,8 +347,30 @@ public class WAVLTree {
     * precondition: none
     * postcondition: none
     */
-   private static int demote(WAVLNode node , Integer rebalancingCounter)
+   private int demote(WAVLNode node , int rebalancingCounter)
    {
+	   // checking if there's a need for further demotes or for rotations.
+	   // if node is a leaf
+	   if (isLeaf(node)){
+		   node.rankDiff += 1;
+		   rebalancingCounter += 1;
+		   if(node.rankDiff == 2){
+			   return rebalancingCounter;
+		   }else{ // need to further demote
+			   
+		   }
+	   }
+	   if(node.rankDiff == 2){
+		   // parent has no sons
+		   if(node.leftNode)
+		   return rebalancingCounter;
+	   }else if(node.rankDiff ==3){
+		   
+		   
+	   }
+	   
+	   
+	   
 	   return 0;
    }
    
