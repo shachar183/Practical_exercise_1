@@ -8,7 +8,8 @@
  */
 
 public class WAVLTree {
-
+	WAVLNode WAVL_topNode;
+	int size =0;
   /**
    * public boolean empty()
    *
@@ -112,9 +113,61 @@ public class WAVLTree {
     */
    public int size()
    {
-	   return 42; // to be replaced by student code
+	   return size; 
    }
 
+   /**
+    * private static void promote(WAVLNode node)
+    *
+    * promote the node.
+    *
+    * precondition: none
+    * postcondition: none
+    */
+   private static void promote(WAVLNode node)
+   {
+	   
+   }
+   
+   /**
+    * private static void demote(WAVLNode node)
+    *
+    * Returns the number of nodes in the tree.
+    *
+    * precondition: none
+    * postcondition: none
+    */
+   private static void demote(WAVLNode node)
+   {
+	   
+   }
+   
+   /**
+    * private static void rotateLeft(WAVLNode node)
+    *
+    * Returns the number of nodes in the tree.
+    *
+    * precondition: none
+    * postcondition: none
+    */
+   private static void rotateLeft(WAVLNode node)
+   {
+	   
+   }
+   
+   /**
+    * private static void rotateRight(WAVLNode node)
+    *
+    * Returns the number of nodes in the tree.
+    *
+    * precondition: none
+    * postcondition: none
+    */
+   private static void rotateRight(WAVLNode node)
+   {
+	   
+   }
+   
   /**
    * public class WAVLNode
    *
@@ -124,9 +177,16 @@ public class WAVLTree {
    * This is an example which can be deleted if no such classes are necessary.
    */
   public class WAVLNode{
-
+	  WAVLNode ParentNode;
+	  WAVLNode LeftNode;
+	  WAVLNode RightNode;
+	  boolean rankDiff;
+	  int key;
+	  String Info;  
   }
 
+  
+  
 }
   
 
