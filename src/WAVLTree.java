@@ -389,7 +389,7 @@ public class WAVLTree {
 	  }
 	  
 	  public WAVLNode(WAVLNode parentnode, WAVLNode leftnode,
-			  WAVLNode rightnode, boolean rankdiff, int node_key, String node_info  )
+			  WAVLNode rightnode, int rankdiff, int node_key, String node_info  )
 	  {
 		  parentNode = parentnode;
 		  rightNode = rightnode;
