@@ -288,10 +288,12 @@ public class WAVLTree {
    }
 
    /**
-    * private static int promote(WAVLNode node)
+    * private int promote(WAVLNode WAVL_Node)
     *
     * promote the node.
-    * return number of 	.
+    * 
+    * return number of rebalance.
+    * 
     * precondition: none
     * postcondition: none
     */
