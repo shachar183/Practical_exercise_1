@@ -132,7 +132,34 @@ public class WAVLTree {
    */
    public int delete(int k)
    {
-	   return 42;	// to be replaced by student code
+	   if(empty()){
+		   return -1;
+	   }else{
+		   int rebalancingCounter = 0;
+		   WAVLNode deleteNode = searchNode(k);
+		   if(deleteNode.equals(null)){
+			   return -1;
+		   }else{
+			   //checking if the node has a father.
+			   if(size == 1){
+				   deleteNode = WAVL_emptyNode;
+				   size --;
+			   }else{
+				   WAVLNode deleteNodeParent = deleteNode.parentNode;
+				   // deleteNode is a left son.
+				   if(deleteNode.key < deleteNodeParent.key){
+					   if(deleteNode.rankDiff){
+						   
+					   }
+				   }else{ // deleteNode is a left son.
+					   
+				   }
+			   }
+		   }
+	   }
+	   
+	   return 0;
+   
    }
 
    /**
@@ -282,13 +309,13 @@ public class WAVLTree {
     * private static void demote(WAVLNode node)
     *
     * demotes the node.
-    *
+    * returns how many rebalancing actions were taken.
     * precondition: none
     * postcondition: none
     */
-   private static void demote(WAVLNode node , Integer rebalancingCounter)
+   private static int demote(WAVLNode node , Integer rebalancingCounter)
    {
-	   
+	   return 0;
    }
    
    /**
@@ -362,9 +389,9 @@ public class WAVLTree {
    * This is an example which can be deleted if no such classes are necessary.
    */
   public class WAVLNode{
-	  WAVLNode parentNode = null;
-	  WAVLNode leftNode = null;
-	  WAVLNode rightNode = null;
+	  WAVLNode parentNode;
+	  WAVLNode leftNode;
+	  WAVLNode rightNode;
 	  boolean rankDiff; // false = 1, true = 2
 	  int key;
 	  String info;  
@@ -377,7 +404,7 @@ public class WAVLTree {
 	  }
 	  
 	  public WAVLNode(WAVLNode parentnode, WAVLNode leftnode,
-			  WAVLNode rightnode, boolean rankdiff, int node_key, String node_info  )
+			  WAVLNode rightnode, boolean rankdiff, int node_key, String node_info)
 	  {
 		  parentNode = parentnode;
 		  rightNode = rightnode;
