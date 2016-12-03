@@ -29,21 +29,53 @@ public class WAVLTree {
    */
   public String search(int k)
   {
-	  WAVLNode WAVL_tempNode = WAVL_root;
-	  while (WAVL_tempNode != WAVL_emptyNode)
+	  WAVLNode WAVL_tempNode = searchNode(k);
+	  if(WAVL_tempNode!=null)
 	  {
-		  if(WAVL_tempNode.key>k)
-		  {
-			  WAVL_tempNode=WAVL_tempNode.rightNode;
-		  }else if(WAVL_tempNode.key<k){
-			  WAVL_tempNode=WAVL_tempNode.leftNode;
-		  }else{
-			  return WAVL_tempNode.info;
-		  }
+		  return WAVL_tempNode.info;
+	  }else{
+		  return null;
 	  }
-	  return null;
   }
 
+  public WAVLNode searchNode(int k)
+  {
+	  if(empty()){
+		  return null;
+	  }
+	  
+	  WAVLNode WAVL_tempNode = searchInsertionNode(k);
+	  if (WAVL_tempNode.key==k)
+	  {
+		  return WAVL_tempNode;
+	  }else{
+		  return null;
+	  }
+  }
+
+  
+  public WAVLNode searchInsertionNode(int k)
+  {
+	  if(empty()){
+		  return null;
+	  }else{
+		  WAVLNode WAVL_tempNode = WAVL_root;
+		  while (WAVL_tempNode != WAVL_emptyNode)
+		  {
+			  if(WAVL_tempNode.key>k)
+			  {
+				  WAVL_tempNode=WAVL_tempNode.rightNode;
+			  }else if(WAVL_tempNode.key<k){
+				  WAVL_tempNode=WAVL_tempNode.leftNode;
+			  }else{
+				  break;
+			  }
+		  }
+		  return WAVL_tempNode;
+	  }
+	  
+  }
+  
   /**
    * public int insert(int k, String i)
    *
@@ -99,8 +131,31 @@ public class WAVLTree {
    */
   public int[] keysToArray()
   {
-        int[] arr = new int[42];
-        return arr;
+	  if(empty())
+      {
+      	return new int[0]; // return empty array if empty.
+      }
+      
+	  int[] arr = new int[size]; // to be replaced by student code
+      WAVLNode WAVL_tempNode = getSmallestNode();
+      int i = 0; // counter
+      while(i < size)
+      {
+	        arr[i]=WAVL_tempNode.key;
+	        i++;
+	        
+	        if(WAVL_tempNode.rightNode!=WAVL_emptyNode)
+	        {
+	        	WAVL_tempNode=WAVL_tempNode.rightNode;
+	        	while(WAVL_tempNode.leftNode!=WAVL_emptyNode)
+	        	{
+	        		WAVL_tempNode=WAVL_tempNode.leftNode;
+	        	}
+	        }else if(WAVL_tempNode.parentNode!=null){
+	        	WAVL_tempNode=WAVL_tempNode.parentNode;
+	        }
+		}
+      return arr;  
   }
 
   /**
@@ -133,8 +188,6 @@ public class WAVLTree {
 	        	}
 	        }else if(WAVL_tempNode.parentNode!=null){
 	        	WAVL_tempNode=WAVL_tempNode.parentNode;
-	        }else{
-	        	break;
 	        }
   		}
         return arr;                    // to be replaced by student code
