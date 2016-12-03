@@ -85,7 +85,41 @@ public class WAVLTree {
    * returns -1 if an item with key k already exists in the tree.
    */
    public int insert(int k, String i) {
-	  return 42;	// to be replaced by student code
+	   if(empty()){
+		   WAVL_root = new WAVLNode();
+		   WAVL_root.leftNode=WAVL_emptyNode;
+		   WAVL_root.rightNode=WAVL_emptyNode;
+		   WAVL_root.info=i;
+		   WAVL_root.key=k;
+		   size++;
+		   return 0;
+	   }else{
+		   Integer rebalancingCounter = new Integer(0);
+		   WAVLNode WAVL_tempNode = searchInsertionNode(k);
+		   if (WAVL_tempNode.key == k)
+		   {
+			   return -1; // already exist.
+		   }else{
+			   size++;
+			   if(WAVL_tempNode.key<k)
+			   {
+				   	WAVL_tempNode.leftNode = new WAVLNode(WAVL_tempNode,WAVL_emptyNode,
+				   			WAVL_emptyNode,false,k,i);	
+				   	if (WAVL_tempNode.rightNode == WAVL_emptyNode)
+				   	{
+				   		promote(WAVL_tempNode,rebalancingCounter);
+				   	}
+			   }else{
+				   WAVL_tempNode.rightNode = new WAVLNode(WAVL_tempNode,WAVL_emptyNode,
+				   			WAVL_emptyNode,false,k,i);
+				   if (WAVL_tempNode.leftNode == WAVL_emptyNode)
+				   	{
+				   		promote(WAVL_tempNode,rebalancingCounter);
+				   	}
+			   }
+			   return rebalancingCounter;
+		   }
+	   }
    }
 
   /**
@@ -151,22 +185,13 @@ public class WAVLTree {
       
 	  int[] arr = new int[size]; // to be replaced by student code
       WAVLNode WAVL_tempNode = getSmallestNode();
-      int i = 0; // counter
-      while(i < size)
+      int counter = 0;
+      while(counter < size)
       {
-	        arr[i]=WAVL_tempNode.key;
-	        i++;
+	        arr[counter]=WAVL_tempNode.key;
+	        counter++;
 	        
-	        if(WAVL_tempNode.rightNode!=WAVL_emptyNode)
-	        {
-	        	WAVL_tempNode=WAVL_tempNode.rightNode;
-	        	while(WAVL_tempNode.leftNode!=WAVL_emptyNode)
-	        	{
-	        		WAVL_tempNode=WAVL_tempNode.leftNode;
-	        	}
-	        }else if(WAVL_tempNode.parentNode!=null){
-	        	WAVL_tempNode=WAVL_tempNode.parentNode;
-	        }
+	        WAVL_tempNode = getSuccessor(WAVL_tempNode);
 		}
       return arr;  
   }
@@ -187,38 +212,45 @@ public class WAVLTree {
         
 	  	String[] arr = new String[size]; // to be replaced by student code
         WAVLNode WAVL_tempNode = getSmallestNode();
-        int i = 0; // counter
-        while(i < size)
+        int counter = 0; 
+        while(counter < size)
         {
-	        arr[i]=WAVL_tempNode.info;
-	        i++;
-	        if(WAVL_tempNode.rightNode!=WAVL_emptyNode)
-	        {
-	        	WAVL_tempNode=WAVL_tempNode.rightNode;
-	        	while(WAVL_tempNode.leftNode!=WAVL_emptyNode)
-	        	{
-	        		WAVL_tempNode=WAVL_tempNode.leftNode;
-	        	}
-	        }else if(WAVL_tempNode.parentNode!=null){
-	        	WAVL_tempNode=WAVL_tempNode.parentNode;
-	        }
+	        arr[counter]=WAVL_tempNode.info;
+	        counter++;
+	        
+	        WAVL_tempNode = getSuccessor(WAVL_tempNode);
   		}
         return arr;                    // to be replaced by student code
   }
   
   private WAVLNode getSmallestNode()
   {
-	  if(!empty())
+	  if(empty())
 	  {
-		  WAVLNode WAVL_tempNode = WAVL_root;
-		  while(WAVL_tempNode.leftNode!=WAVL_emptyNode)
-		  {
-			  WAVL_tempNode=WAVL_tempNode.leftNode;
-		  }
-		  return WAVL_tempNode;
+		 return null; 
 	  }else{
-		  return WAVL_emptyNode; 
+		 WAVLNode WAVL_tempNode = WAVL_root;
+		 while(WAVL_tempNode.leftNode!=WAVL_emptyNode)
+		 {
+			 WAVL_tempNode=WAVL_tempNode.leftNode;
+		 }
+		 return WAVL_tempNode;
 	  }
+  }
+  
+  private WAVLNode getSuccessor(WAVLNode WAVL_Node)
+  {
+	  if(WAVL_Node.rightNode!=WAVL_emptyNode)
+      {
+		  WAVL_Node=WAVL_Node.rightNode;
+      	while(WAVL_Node.leftNode!=WAVL_emptyNode)
+      	{
+      		WAVL_Node=WAVL_Node.leftNode;
+      	}
+      }else if(WAVL_Node.parentNode!=null){
+    	  WAVL_Node=WAVL_Node.parentNode;
+      }
+	  return WAVL_Node;
   }
   
    /**
@@ -242,7 +274,7 @@ public class WAVLTree {
     * precondition: none
     * postcondition: none
     */
-   private static void promote(WAVLNode node)
+   private static void promote(WAVLNode node , Integer rebalancingCounter)
    {
 	   
    }
@@ -255,7 +287,7 @@ public class WAVLTree {
     * precondition: none
     * postcondition: none
     */
-   private static void demote(WAVLNode node)
+   private static void demote(WAVLNode node , Integer rebalancingCounter)
    {
 	   
    }
@@ -294,12 +326,30 @@ public class WAVLTree {
    * This is an example which can be deleted if no such classes are necessary.
    */
   public class WAVLNode{
-	  WAVLNode parentNode;
-	  WAVLNode leftNode;
-	  WAVLNode rightNode;
-	  boolean rankDiff;
+	  WAVLNode parentNode = null;
+	  WAVLNode leftNode = null;
+	  WAVLNode rightNode = null;
+	  boolean rankDiff; // false = 1, true = 2
 	  int key;
 	  String info;  
+	  
+	  public WAVLNode()
+	  {
+		  parentNode = null;
+		  rightNode = null;
+		  leftNode = null;
+	  }
+	  
+	  public WAVLNode(WAVLNode parentnode, WAVLNode leftnode,
+			  WAVLNode rightnode, boolean rankdiff, int node_key, String node_info  )
+	  {
+		  parentNode = parentnode;
+		  rightNode = rightnode;
+		  leftNode = leftnode;
+		  rankDiff = rankdiff;
+		  key=node_key;
+		  info=node_info;
+	  }
   }
 
   
