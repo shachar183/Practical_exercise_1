@@ -244,6 +244,14 @@ public class WAVLTree {
         return arr;                    
   }
   
+  /**
+   * private WAVLNode getSmallestNode
+   * 
+   * Returns pointer of the node with the smallest key in the tree
+   * 
+   * or null if the tree is empty.
+   */
+  
   private WAVLNode getSmallestNode()
   {
 	  if(empty())
@@ -258,6 +266,12 @@ public class WAVLTree {
 		 return WAVL_tempNode;
 	  }
   }
+  
+  /**
+   * private WAVLNode getSuccessor(WAVLNode WAVL_Node)
+   * 
+   * Returns pointer of the first node with a bigger key then WAVL_Node 
+   */
   
   private WAVLNode getSuccessor(WAVLNode WAVL_Node)
   {
@@ -487,6 +501,22 @@ public class WAVLTree {
 	  }
   }
 
+  
+  // for testing:
+  
+	public boolean TESTisThisTreeOk()
+	{
+		if(!empty())
+		{
+			 WAVLNode WAVL_tempNode = getSmallestNode();
+			 WAVLNode WAVL_tempNodeSuccessor = getSuccessor(WAVL_tempNode);
+			 
+		}else{
+			return true;
+		}
+	}
+  
+  
   
   
 }
