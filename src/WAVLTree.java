@@ -8,7 +8,7 @@
  */
 
 public class WAVLTree {
-	final WAVLNode WAVL_emptyNode = new WAVLNode();
+	final WAVLNode WAVL_emptyNode = new WAVLTree().WAVLNode();
 	private WAVLNode WAVL_root = WAVL_emptyNode;
 	private int size = 0;
   /**
@@ -317,24 +317,82 @@ public class WAVLTree {
     * precondition: none
     * postcondition: none
     */
-   private static int promote(WAVLNode WAVL_Node)
+   private int promote(WAVLNode WAVL_Node)
    {
 	   int rebalanceCounter = 0;
-	   do{
+	   while(WAVL_Node != WAVL_root){ // "because in the end it doesn't even matter"
 		   if(WAVL_Node.rankDiff == 2)
 		   {
 			   WAVL_Node.rankDiff = 1;
 			   return rebalanceCounter + 1;
 		   }else{
-			   if (WAVL_Node.parentNode == null)
+			   if(WAVL_Node==WAVL_Node.parentNode.leftNode) // is the left node
 			   {
-				   return rebalanceCounter; // "because in the end it doesn't even matter"
-			   }else{
-				   if(WAVL_Node==WAVL_Node.parentNode.leftNode)
+				   if((WAVL_Node.parentNode.rightNode.rankDiff == 1) && (WAVL_Node.parentNode.rightNode != WAVL_emptyNode))
 				   {
-					   if(WAVL_Node.parentNode) 
+					   WAVL_Node.parentNode.rightNode.rankDiff = 2;
+					   WAVL_Node = WAVL_Node.parentNode;
+					   rebalanceCounter++;
+				   }else{//need to be rotated
+					   if((WAVL_Node.rightNode.rankDiff == 2) || (WAVL_Node.rightNode == WAVL_emptyNode))//need single rotation
+					   {
+						   rotateRight(WAVL_Node.parentNode); // WAVL_Node became the parent now
+						   rebalanceCounter++;
+						   
+						   //fix ranks:
+						   WAVL_Node.rankDiff = WAVL_Node.rightNode.rankDiff;
+						   WAVL_Node.rightNode.rankDiff = 1;
+						   WAVL_Node.rightNode.rightNode.rankDiff = 1;
+						   WAVL_Node.leftNode.rightNode.rankDiff = 1;
+						   
+						   return rebalanceCounter;
+					   }else{//need double rotation
+						   WAVL_Node = doubleRotateLeftRight(WAVL_Node.parentNode); // WAVL_Node.rightNode became the parent now
+						   rebalanceCounter++;
+						   
+						   //fix ranks:
+						   WAVL_Node.rankDiff = WAVL_Node.rightNode.rankDiff;
+						   WAVL_Node.rightNode.rankDiff = 1;
+						   WAVL_Node.rightNode.rightNode.rankDiff = 1;
+						   WAVL_Node.leftNode.leftNode.rankDiff = 1;
+						   
+						   return rebalanceCounter;
+					   }
+				   }
+			   }else{ // is the right node
+				   if((WAVL_Node.parentNode.leftNode.rankDiff == 1) && (WAVL_Node.parentNode.leftNode != WAVL_emptyNode))
+				   {
+					   WAVL_Node.parentNode.leftNode.rankDiff = 2;
+					   WAVL_Node = WAVL_Node.parentNode;
+					   rebalanceCounter++;
+				   }else{//need to be rotated
+					   if((WAVL_Node.leftNode.rankDiff == 2) || (WAVL_Node.leftNode == WAVL_emptyNode))//need single rotation
+					   {
+						   rotateLeft(WAVL_Node.parentNode); // WAVL_Node became the parent now
+						   rebalanceCounter++;
+						   
+						   //fix ranks:
+						   WAVL_Node.rankDiff = WAVL_Node.leftNode.rankDiff;
+						   WAVL_Node.leftNode.rankDiff = 1;
+						   WAVL_Node.leftNode.leftNode.rankDiff = 1;
+						   WAVL_Node.rightNode.leftNode.rankDiff = 1;
+						   
+						   return rebalanceCounter;
+					   }else{//need double rotation
+						   WAVL_Node = doubleRotateRightLeft(WAVL_Node.parentNode); // WAVL_Node.leftNode became the parent now
+						   rebalanceCounter++;
+						   
+						   //fix ranks:
+						   WAVL_Node.rankDiff = WAVL_Node.leftNode.rankDiff;
+						   WAVL_Node.leftNode.rankDiff = 1;
+						   WAVL_Node.leftNode.leftNode.rankDiff = 1;
+						   WAVL_Node.rightNode.rightNode.rankDiff = 1;
+						   
+						   return rebalanceCounter;
+					   }
 				   }
 			   }
+			   return rebalanceCounter; 
 		   }
 	   }
    }
