@@ -68,27 +68,27 @@ public class WAVLTree {
 	   if (empty()){
 		   return null;
 	   }
-	   if (root.leftNode == null){
-		   return root.info;
+	   while(root.leftNode != null){
+		   root = root.leftNode;
 	   }
-	   return min(root.leftNode);
+	   return root.info;
    }
 
    /**
     * public String max()
     *
     * Returns the info of the item with the largest key in the tree,
-    * or null if the tree is empty
+    * or null if the tree is empty.
     */
    public String max(WAVLNode root)
    {
 	   if (empty()){
 		   return null;
 	   }
-	   if (root.rightNode == null){
-		   return root.info;
+	   while(root.rightNode != null){
+		   root = root.rightNode;
 	   }
-	   return min(root.rightNode);
+	   return root.info;
    }
 
 
@@ -146,7 +146,7 @@ public class WAVLTree {
    /**
     * private static void demote(WAVLNode node)
     *
-    * Returns the number of nodes in the tree.
+    * demotes the node.
     *
     * precondition: none
     * postcondition: none
@@ -159,7 +159,7 @@ public class WAVLTree {
    /**
     * private static void rotateLeft(WAVLNode node)
     *
-    * Returns the number of nodes in the tree.
+    * performs a left rotation of the tree.
     *
     * precondition: none
     * postcondition: none
@@ -172,14 +172,13 @@ public class WAVLTree {
    /**
     * private static void rotateRight(WAVLNode node)
     *
-    * Returns the number of nodes in the tree.
+    * performs a right rotation of the tree.
     *
     * precondition: none
     * postcondition: none
     */
    private static void rotateRight(WAVLNode node)
    {
-	   
    }
    
   /**
