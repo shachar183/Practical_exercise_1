@@ -10,7 +10,7 @@
 public class WAVLTree {
 	final WAVLNode WAVL_emptyNode = new WAVLNode();
 	private WAVLNode WAVL_root = WAVL_emptyNode;
-	int size = 0;
+	private int size = 0;
   /**
    * public boolean empty()
    *
@@ -65,7 +65,13 @@ public class WAVLTree {
     */
    public String min(WAVLNode root)
    {
-	   return "";
+	   if (empty()){
+		   return null;
+	   }
+	   if (root.leftNode == null){
+		   return root.info;
+	   }
+	   return min(root.leftNode);
    }
 
    /**
@@ -74,10 +80,17 @@ public class WAVLTree {
     * Returns the info of the item with the largest key in the tree,
     * or null if the tree is empty
     */
-   public String max()
+   public String max(WAVLNode root)
    {
-	   return "42"; // to be replaced by student code
+	   if (empty()){
+		   return null;
+	   }
+	   if (root.rightNode == null){
+		   return root.info;
+	   }
+	   return min(root.rightNode);
    }
+
 
   /**
    * public int[] keysToArray()
@@ -178,12 +191,12 @@ public class WAVLTree {
    * This is an example which can be deleted if no such classes are necessary.
    */
   public class WAVLNode{
-	  WAVLNode ParentNode;
-	  WAVLNode LeftNode;
-	  WAVLNode RightNode;
+	  WAVLNode parentNode;
+	  WAVLNode leftNode;
+	  WAVLNode rightNode;
 	  boolean rankDiff;
 	  int key;
-	  String Info;  
+	  String info;  
   }
 
   
