@@ -8,7 +8,8 @@
  */
 
 public class WAVLTree {
-	WAVLNode WAVL_topNode;
+	final WAVLNode WAVL_emptyNode = new WAVLNode();
+	private WAVLNode WAVL_topNode=WAVL_emptyNode;
 	int size =0;
   /**
    * public boolean empty()
@@ -17,7 +18,7 @@ public class WAVLTree {
    *
    */
   public boolean empty() {
-    return false; // to be replaced by student code
+    return !(WAVL_topNode==WAVL_emptyNode); // to be replaced by student code
   }
 
  /**
