@@ -86,15 +86,10 @@ public class WAVLTree {
    */
    public int insert(int k, String i) {
 	   if(empty()){
-		   WAVL_root = new WAVLNode();
-		   WAVL_root.leftNode=WAVL_emptyNode;
-		   WAVL_root.rightNode=WAVL_emptyNode;
-		   WAVL_root.info=i;
-		   WAVL_root.key=k;
+		   WAVL_root = new WAVLNode(null, WAVL_emptyNode, WAVL_emptyNode, 1, k ,i);
 		   size++;
 		   return 0;
 	   }else{
-		   Integer rebalancingCounter = new Integer(0);
 		   WAVLNode WAVL_tempNode = searchInsertionNode(k);
 		   if (WAVL_tempNode.key == k)
 		   {
@@ -104,20 +99,20 @@ public class WAVLTree {
 			   if(WAVL_tempNode.key<k)
 			   {
 				   	WAVL_tempNode.leftNode = new WAVLNode(WAVL_tempNode,WAVL_emptyNode,
-				   			WAVL_emptyNode,false,k,i);	
-				   	if (WAVL_tempNode.rightNode == WAVL_emptyNode)
+				   			WAVL_emptyNode,1,k,i);	
+				   	if (WAVL_tempNode.rightNode == WAVL_emptyNode) // if insertionNode was a leaf
 				   	{
-				   		promote(WAVL_tempNode,rebalancingCounter);
+				   		return promote(WAVL_tempNode);
 				   	}
 			   }else{
 				   WAVL_tempNode.rightNode = new WAVLNode(WAVL_tempNode,WAVL_emptyNode,
-				   			WAVL_emptyNode,false,k,i);
-				   if (WAVL_tempNode.leftNode == WAVL_emptyNode)
+				   			WAVL_emptyNode,1,k,i);
+				   if (WAVL_tempNode.leftNode == WAVL_emptyNode) // if insertionNode was a leaf
 				   	{
-				   		promote(WAVL_tempNode,rebalancingCounter);
+					   return promote(WAVL_tempNode);
 				   	}
 			   }
-			   return rebalancingCounter;
+			   return 0;
 		   }
 	   }
    }
@@ -266,16 +261,33 @@ public class WAVLTree {
    }
 
    /**
-    * private static void promote(WAVLNode node)
+    * private static int promote(WAVLNode node)
     *
     * promote the node.
-    *
+    * return number of 	.
     * precondition: none
     * postcondition: none
     */
-   private static void promote(WAVLNode node , Integer rebalancingCounter)
+   private static int promote(WAVLNode WAVL_Node)
    {
-	   
+	   int rebalanceCounter = 0;
+	   do{
+		   if(WAVL_Node.rankDiff == 2)
+		   {
+			   WAVL_Node.rankDiff = 1;
+			   return rebalanceCounter + 1;
+		   }else{
+			   if (WAVL_Node.parentNode == null)
+			   {
+				   return rebalanceCounter; // "because in the end it doesn't even matter"
+			   }else{
+				   if(WAVL_Node==WAVL_Node.parentNode.leftNode)
+				   {
+					   if(WAVL_Node.parentNode) 
+				   }
+			   }
+		   }
+	   }
    }
    
    /**
@@ -365,7 +377,7 @@ public class WAVLTree {
 	  WAVLNode parentNode = null;
 	  WAVLNode leftNode = null;
 	  WAVLNode rightNode = null;
-	  boolean rankDiff; // false = 1, true = 2
+	  int rankDiff; 
 	  int key;
 	  String info;  
 	  
