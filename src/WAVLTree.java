@@ -9,8 +9,8 @@
 
 public class WAVLTree {
 	final WAVLNode WAVL_emptyNode = new WAVLNode();
-	private WAVLNode WAVL_topNode=WAVL_emptyNode;
-	int size =0;
+	private WAVLNode WAVL_root = WAVL_emptyNode;
+	int size = 0;
   /**
    * public boolean empty()
    *
@@ -18,7 +18,7 @@ public class WAVLTree {
    *
    */
   public boolean empty() {
-    return !(WAVL_topNode==WAVL_emptyNode); // to be replaced by student code
+    return !(WAVL_root==WAVL_emptyNode); 
   }
 
  /**
@@ -60,12 +60,12 @@ public class WAVLTree {
    /**
     * public String min()
     *
-    * Returns the iמfo of the item with the smallest key in the tree,
+    * Returns the info of the item with the smallest key in the tree,
     * or null if the tree is empty
     */
-   public String min()
+   public String min(WAVLNode root)
    {
-	   return "42"; // to be replaced by student code
+	   return "";
    }
 
    /**
@@ -172,7 +172,7 @@ public class WAVLTree {
   /**
    * public class WAVLNode
    *
-   * If you wish to implement classes other than WAVLTree
+   * If you wish to implement classes other than WAVLTree 
    * (for example WAVLNode), do it in this file, not in 
    * another file.
    * This is an example which can be deleted if no such classes are necessary.
