@@ -8,7 +8,7 @@
  */
 
 public class WAVLTree {
-	final WAVLNode WAVL_emptyNode = new WAVLTree().WAVLNode();
+	final WAVLNode WAVL_emptyNode = new WAVLNode();
 	private WAVLNode WAVL_root = WAVL_emptyNode;
 	private int size = 0;
   /**
@@ -18,7 +18,7 @@ public class WAVLTree {
    *
    */
   public boolean empty() {
-    return !(WAVL_root==WAVL_emptyNode); 
+    return (WAVL_root==WAVL_emptyNode); 
   }
 
  /**
@@ -60,15 +60,23 @@ public class WAVLTree {
 		  return null;
 	  }else{
 		  WAVLNode WAVL_tempNode = WAVL_root;
-		  while (WAVL_tempNode != WAVL_emptyNode)
+		  while (WAVL_tempNode.key != k)
 		  {
 			  if(WAVL_tempNode.key>k)
 			  {
-				  WAVL_tempNode=WAVL_tempNode.rightNode;
-			  }else if(WAVL_tempNode.key<k){
-				  WAVL_tempNode=WAVL_tempNode.leftNode;
+				  if(WAVL_tempNode.leftNode == WAVL_emptyNode)
+				  {
+					  return WAVL_tempNode;
+				  }else{
+					  WAVL_tempNode=WAVL_tempNode.leftNode;
+				  }
 			  }else{
-				  break;
+				  if(WAVL_tempNode.rightNode == WAVL_emptyNode)
+				  {
+					  return WAVL_tempNode;
+				  }else{
+					  WAVL_tempNode=WAVL_tempNode.rightNode;
+				  }
 			  }
 		  }
 		  return WAVL_tempNode;
@@ -98,17 +106,17 @@ public class WAVLTree {
 		   }else{
 			   size++;
 			   // tempNode would be left child
-			   if(WAVL_tempNode.key<k)
+			   if(WAVL_tempNode.key>k)
 			   {
 				   	WAVL_tempNode.leftNode = new WAVLNode(WAVL_tempNode,WAVL_emptyNode,
-				   			WAVL_emptyNode,1,k,i);	
+				   			WAVL_emptyNode,WAVL_tempNode.rightNode.rankDiff,k,i);	
 				   	if (WAVL_tempNode.rightNode == WAVL_emptyNode) // if tempNode was a leaf
 				   	{
 				   		return promote(WAVL_tempNode);
 				   	}
 			   }else{ // tempNode would be right child
 				   WAVL_tempNode.rightNode = new WAVLNode(WAVL_tempNode,WAVL_emptyNode,
-				   			WAVL_emptyNode,1,k,i);
+				   			WAVL_emptyNode,WAVL_tempNode.leftNode.rankDiff,k,i);
 				   if (WAVL_tempNode.leftNode == WAVL_emptyNode) // if tempNode was a leaf
 				   	{
 					   return promote(WAVL_tempNode);
@@ -688,8 +696,10 @@ public class WAVLTree {
       	{
       		WAVL_Node=WAVL_Node.leftNode;
       	}
-      }else if(WAVL_Node.parentNode!=null){
-    	  WAVL_Node=WAVL_Node.parentNode;
+      }else{
+    	  while(WAVL_Node.parentNode!=null && WAVL_Node == WAVL_Node.parentNode.rightNode){
+    		  WAVL_Node=WAVL_Node.parentNode;
+    	  }
       }
 	  return WAVL_Node;
   }
@@ -743,7 +753,7 @@ public class WAVLTree {
 						   node.rankDiff = node.rightNode.rankDiff;
 						   node.rightNode.rankDiff = 1;
 						   node.rightNode.rightNode.rankDiff = 1;
-						   node.leftNode.rightNode.rankDiff = 1;
+						   node.rightNode.leftNode.rankDiff = 1;
 						   
 						   return rebalanceCounter;
 					   }else{//need double rotation
@@ -775,7 +785,7 @@ public class WAVLTree {
 						   node.rankDiff = node.leftNode.rankDiff;
 						   node.leftNode.rankDiff = 1;
 						   node.leftNode.leftNode.rankDiff = 1;
-						   node.rightNode.leftNode.rankDiff = 1;
+						   node.leftNode.rightNode.rankDiff = 1;
 						   
 						   return rebalanceCounter;
 					   }else{//need double rotation
@@ -792,9 +802,9 @@ public class WAVLTree {
 					   }
 				   }
 			   }
-			   return rebalanceCounter; 
 		   }
 	   }
+	   return rebalanceCounter; 
    }
    
    /**
@@ -821,7 +831,7 @@ public class WAVLTree {
 	   }
 	   if(node.rankDiff == 2){
 		   // parent has no sons
-		   if(node.leftNode)
+		   //if(node.leftNode)
 		   return rebalancingCounter;
 	   }else if(node.rankDiff ==3){
 		   
@@ -841,11 +851,26 @@ public class WAVLTree {
     * precondition: receives the node which needs to be rotated down.
     * postcondition: none
     */
-   private static WAVLNode rotateLeft(WAVLNode node)
+   private WAVLNode rotateLeft(WAVLNode node)
    {
 	   WAVLNode pivotNode = node.rightNode;
+	   if(node.parentNode!=null){
+		   if(node.parentNode.leftNode==node)
+		   {
+			   node.parentNode.leftNode = pivotNode;
+		   }else{
+			   node.parentNode.rightNode = pivotNode;
+		   }
+	   }else{
+		   WAVL_root = pivotNode;
+	   }
 	   node.rightNode = pivotNode.leftNode;
 	   pivotNode.leftNode = node;
+	   
+	   pivotNode.parentNode = pivotNode.leftNode.parentNode;
+	   pivotNode.leftNode.parentNode = pivotNode;
+	   pivotNode.leftNode.rightNode.parentNode = pivotNode.leftNode;
+
 	   return pivotNode;
    }
    
@@ -857,11 +882,25 @@ public class WAVLTree {
     * precondition: receives the node which needs to be rotated down.
     * postcondition: none
     */
-   private static WAVLNode rotateRight(WAVLNode node)
+   private WAVLNode rotateRight(WAVLNode node)
    {
 	   WAVLNode pivotNode = node.leftNode;
+	   if(node.parentNode!=null){
+		   if(node.parentNode.leftNode==node)
+		   {
+			   node.parentNode.leftNode = pivotNode;
+		   }else{
+			   node.parentNode.rightNode = pivotNode;
+		   }
+	   }else{
+		   WAVL_root = pivotNode;
+	   }
 	   node.leftNode = pivotNode.rightNode;
 	   pivotNode.rightNode = node;
+	   pivotNode.parentNode = pivotNode.rightNode.parentNode;
+	   pivotNode.rightNode.parentNode = pivotNode;
+	   pivotNode.rightNode.leftNode.parentNode = pivotNode.rightNode;
+	   
 	   return pivotNode;
    }
    
@@ -873,11 +912,10 @@ public class WAVLTree {
     * precondition: receives the node which needs to be rotated down.
     * postcondition: none
     */
-   private static WAVLNode doubleRotateLeftRight(WAVLNode node)
+   private WAVLNode doubleRotateLeftRight(WAVLNode node)
    {
 	   node.leftNode = rotateLeft(node.leftNode);
-	   WAVLNode pivotNode = rotateRight(node);
-	   return pivotNode;
+	   return rotateRight(node);
    }
    
    /**
@@ -888,11 +926,10 @@ public class WAVLTree {
     * precondition: receives the node which needs to be rotated down.
     * postcondition: none
     */
-   private static WAVLNode doubleRotateRightLeft(WAVLNode node)
+   private WAVLNode doubleRotateRightLeft(WAVLNode node)
    {
-	   node.rightNode = rotateRight(node.rightNode);
-	   WAVLNode pivotNode = rotateLeft(node);
-	   return pivotNode;
+	   rotateRight(node.rightNode);
+	   return rotateLeft(node);
    }
    
   /**
@@ -916,6 +953,7 @@ public class WAVLTree {
 		  parentNode = null;
 		  rightNode = null;
 		  leftNode = null;
+		  rankDiff = 1;
 	  }
 	  
 	  public WAVLNode(WAVLNode parentnode, WAVLNode leftnode,
@@ -938,8 +976,47 @@ public class WAVLTree {
 		if(!empty())
 		{
 			 WAVLNode WAVL_tempNode = getSmallestNode();
-			 WAVLNode WAVL_tempNodeSuccessor = getSuccessor(WAVL_tempNode);
-			 
+			 int counter = 0;
+			 boolean passedThrouthALeaf = false;
+			 int rank = 0;
+			 do{
+				 if (isLeaf(WAVL_tempNode))
+				 {
+					 if(passedThrouthALeaf)
+					 {
+						 if(rank!=0){
+							 return false;
+						 }
+					 }else{
+						 passedThrouthALeaf=true;
+						 rank = 0;
+					 }
+				 }
+				 do{
+					 if(WAVL_tempNode.rightNode!=WAVL_emptyNode)
+				     {
+						WAVL_tempNode=WAVL_tempNode.rightNode;
+						rank -= WAVL_tempNode.rankDiff;
+						while(WAVL_tempNode.leftNode!=WAVL_emptyNode)
+						{
+							 WAVL_tempNode=WAVL_tempNode.leftNode;
+							 rank -= WAVL_tempNode.rankDiff;
+						}
+				      }else if(WAVL_tempNode.parentNode!=null){
+				    	  while(WAVL_tempNode.parentNode!=null && WAVL_tempNode ==WAVL_tempNode.parentNode.rightNode){
+				    		  rank += WAVL_tempNode.rankDiff;
+					    	  WAVL_tempNode=WAVL_tempNode.parentNode;
+				    	  }
+				    	  if(WAVL_tempNode.parentNode!=null)
+				    	  {
+				    		  rank += WAVL_tempNode.rankDiff;
+					    	  WAVL_tempNode=WAVL_tempNode.parentNode;
+				    	  }
+				      }
+					 counter++;
+				 }while(!isLeaf(WAVL_tempNode) && counter<size);
+			 }while(counter<size);
+			 return true;
 		}else{
 			return true;
 		}
