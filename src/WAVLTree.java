@@ -700,6 +700,10 @@ public class WAVLTree {
     	  while(WAVL_Node.parentNode!=null && WAVL_Node == WAVL_Node.parentNode.rightNode){
     		  WAVL_Node=WAVL_Node.parentNode;
     	  }
+		  if(WAVL_Node.parentNode!=null)
+		  {
+			  WAVL_Node=WAVL_Node.parentNode;
+		  }
       }
 	  return WAVL_Node;
   }
