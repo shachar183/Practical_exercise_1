@@ -577,7 +577,7 @@ public class WAVLTree {
     * Returns the info of the item with the smallest key in the tree,
     * or null if the tree is empty
     */
-   public String min(WAVLNode root)
+   public String min()
    {
 	   if (empty()){
 		   return null;
@@ -613,15 +613,10 @@ public class WAVLTree {
    */
   public int[] keysToArray()
   {
-	  if(empty())
-      {
-      	return new int[0]; // return empty array if empty.
-      }
-      
 	  int[] arr = new int[size]; 
       WAVLNode WAVL_tempNode = getSmallestNode();
-      int counter = 0;
-      while(counter < size)
+      int counter = 0; 
+      while(WAVL_tempNode!=null)
       {
 	        arr[counter]=WAVL_tempNode.key;
 	        counter++;
@@ -640,15 +635,10 @@ public class WAVLTree {
    */
   public String[] infoToArray()
   {
-        if(empty())
-        {
-        	return new String[0]; // return empty array if empty.
-        }
-        
 	  	String[] arr = new String[size]; 
         WAVLNode WAVL_tempNode = getSmallestNode();
         int counter = 0; 
-        while(counter < size)
+        while(WAVL_tempNode!=null)
         {
 	        arr[counter]=WAVL_tempNode.info;
 	        counter++;
@@ -666,7 +656,7 @@ public class WAVLTree {
    * or null if the tree is empty.
    */
   
-  private WAVLNode getSmallestNode()
+  public WAVLNode getSmallestNode()
   {
 	  if(empty())
 	  {
@@ -687,7 +677,7 @@ public class WAVLTree {
    * Returns pointer of the first node with a bigger key then WAVL_Node 
    */
   
-  private WAVLNode getSuccessor(WAVLNode WAVL_Node)
+  public WAVLNode getSuccessor(WAVLNode WAVL_Node)
   {
 	  if(WAVL_Node.rightNode!=WAVL_emptyNode)
       {
@@ -703,6 +693,36 @@ public class WAVLTree {
 		  if(WAVL_Node.parentNode!=null)
 		  {
 			  WAVL_Node=WAVL_Node.parentNode;
+		  }else{
+			  return null;
+		  }
+      }
+	  return WAVL_Node;
+  }
+  
+  /**
+  * private WAVLNode getPredecessor(WAVLNode WAVL_Node)
+  * 
+  * Returns pointer of the first node with a bigger key then WAVL_Node 
+  */
+  public WAVLNode getPredecessor(WAVLNode WAVL_Node)
+  {
+	  if(WAVL_Node.leftNode!=WAVL_emptyNode)
+      {
+		  WAVL_Node=WAVL_Node.leftNode;
+      	while(WAVL_Node.rightNode!=WAVL_emptyNode)
+      	{
+      		WAVL_Node=WAVL_Node.rightNode;
+      	}
+      }else{
+    	  while(WAVL_Node.parentNode!=null && WAVL_Node == WAVL_Node.parentNode.leftNode){
+    		  WAVL_Node=WAVL_Node.parentNode;
+    	  }
+		  if(WAVL_Node.parentNode!=null)
+		  {
+			  WAVL_Node=WAVL_Node.parentNode;
+		  }else{
+			  return null;
 		  }
       }
 	  return WAVL_Node;
