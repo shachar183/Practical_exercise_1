@@ -598,7 +598,7 @@ public class WAVLTree {
 	   if (empty()){
 		   return null;
 	   }
-	   while(WAVL_tempNode != WAVL_emptyNode){
+	   while(WAVL_tempNode.rightNode != WAVL_emptyNode){
 		   WAVL_tempNode = WAVL_tempNode.rightNode;
 	   }
 	   return WAVL_tempNode.info;
