@@ -78,17 +78,17 @@ public class WAVLTree {
     * Returns the info of the item with the largest key in the tree,
     * or null if the tree is empty.
     */
-   public String max()
-   {
+  public String max()
+  {
 	   WAVLNode WAVL_tempNode = WAVL_root;
 	   if (empty()){
 		   return null;
 	   }
-	   while(WAVL_tempNode != WAVL_emptyNode){
+	   while(WAVL_tempNode.rightNode != WAVL_emptyNode){
 		   WAVL_tempNode = WAVL_tempNode.rightNode;
 	   }
 	   return WAVL_tempNode.info;
-   }
+  }
 
 /**
    * public int insert(int k, String i)
@@ -681,7 +681,7 @@ public class WAVLTree {
 	        arr[counter]=WAVL_tempNode.key;
 	        counter++;
 	        
-	        WAVL_tempNode = getSuccessor(WAVL_tempNode);
+	        WAVL_tempNode = WAVL_tempNode.getSuccessor();
 		}
       return arr;  
   }
@@ -703,7 +703,7 @@ public class WAVLTree {
 	        arr[counter]=WAVL_tempNode.info;
 	        counter++;
 	        
-	        WAVL_tempNode = getSuccessor(WAVL_tempNode);
+	        WAVL_tempNode = WAVL_tempNode.getSuccessor();
   		}
         return arr;                    
   }
@@ -968,7 +968,8 @@ public class WAVLTree {
 		  return this==WAVL_emptyNode;
 	  }
 	  
-	  public WAVLNode getSuccessor(WAVLNode WAVL_Node){
+	  public WAVLNode getSuccessor(){
+		  WAVLNode WAVL_Node = this;
 		  if(!WAVL_Node.rightNode.isExternalLeaf())
 	      {
 			WAVL_Node=WAVL_Node.rightNode;
@@ -991,7 +992,8 @@ public class WAVLTree {
 	  * 
 	  * Returns pointer of the first node with a bigger key then WAVL_Node 
 	  */
-	  public WAVLNode getPredecessor(WAVLNode WAVL_Node){
+	  public WAVLNode getPredecessor(){
+		  WAVLNode WAVL_Node = this;
 		  if(!WAVL_Node.leftNode.isExternalLeaf()){
 			  WAVL_Node=WAVL_Node.leftNode;
 	      	  while(!WAVL_Node.rightNode.isExternalLeaf()){
@@ -1013,7 +1015,7 @@ public class WAVLTree {
   
   // for testing:
   
-	public boolean TESTisThisTreeOk()
+	public boolean testTreeRanks()
 	{
 		if(!empty())
 		{
