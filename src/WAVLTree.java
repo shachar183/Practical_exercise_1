@@ -284,11 +284,11 @@ public class WAVLTree {
 			   if((innerNode.rankDiff == 2) 
 					   || (innerNode.isExternalLeaf())){		// need single rotation
 				   rebalanceCounter++;										
-				   if(node.isLeftNode()){
-					   rotateRight(node.parentNode);  				//node became the parent.
+				   if(node.isLeftNode()){							//node became the parent.
+					   rotateRight(node.parentNode);  				
 					   fixRanksAfterRotate(node,node.rightNode);
 				   }else{
-					   rotateLeft(node.parentNode);  				//node became the parent.
+					   rotateLeft(node.parentNode);  				
 					   fixRanksAfterRotate(node,node.leftNode);
 				   }			
 				   return rebalanceCounter;							//problem solved!
@@ -819,24 +819,7 @@ public class WAVLTree {
 	   return 0;
    }
 
-
-   
-   
-  /**
-   * private WAVLNode getSmallestNode
-   * 
-   * Returns pointer of the node with the smallest key in the tree
-   * 
-   * or null if the tree is empty.
-   */
-
-  /**
-   * private WAVLNode getSuccessor(WAVLNode WAVL_Node)
-   * 
-   * Returns pointer of the first node with a bigger key then WAVL_Node 
-   */
-  
-   /**
+    /**
     * private static WAVLNode rotateLeft(WAVLNode node)
     *
     * performs a left rotation of the tree.
