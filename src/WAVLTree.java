@@ -29,13 +29,10 @@ public class WAVLTree {
 	  
    /**
     * public int size()
-    *
     * returns the number of nodes in the tree.
-    *
     * time complexity: O(1)
-    * 
-    * @pre: none
-    * @post: none
+    * @pre none
+    * @post none
     */
    public int size()
    {
@@ -44,13 +41,10 @@ public class WAVLTree {
 
    /**
    * public boolean empty()
-   *
    * returns true if and only if the tree is empty
-   * 
    * time complexity: O(1)
-   * 
-   * @pre: none
-   * @post: none
+   * @pre none
+   * @post none
    */
    public boolean empty() {
 	   return (WAVL_root==WAVL_emptyNode); 
@@ -58,14 +52,11 @@ public class WAVLTree {
   
    /**
    * public String min()
-   *
-   * returns the info of the item with the smallest key in the tree,
+   * @return the info of the item with the smallest key in the tree, 
    * or null if the tree is empty
-   * 
-   * time complexity: O(log(n))
-   * 
-   * @pre: none
-   * @post: none
+   * @complexity O(log(n))
+   * @pre none
+   * @post none
    */
   public String min()
   {
@@ -78,14 +69,11 @@ public class WAVLTree {
 
 /**
     * public String max()
-    *
-    * returns the info of the item with the largest key in the tree,
+    * @return the info of the item with the largest key in the tree, 
     * or null if the tree is empty.
-    * 
-    * time complexity: O(log(n))
-    * 
-    * @pre: none
-    * @post: none 
+    * @complexity O(log(n))
+    * @pre none
+    * @post none 
     */
   public String max()
   {
@@ -100,18 +88,16 @@ public class WAVLTree {
 
 /**
    * public String search(int nodeKey)
-   * 
-   * returns the info of an item with key nodeKey if it exists in the tree
-   * otherwise, returns null
-   * 
-   * time complexity: O(log(n))
-   * 
-   * @pre: none
-   * @post: none 
+   * @return the info of an item with key nodeKey if it exists in the tree. 
+   * otherwise, returns null.
+   * @param nodeKey the key of the node you are searching for.
+   * @complexity O(log(n))
+   * @pre none
+   * @post none 
    */
-  public String search(int nodeKeyk)
+  public String search(int nodeKey)
   {
-	  WAVLNode WAVL_tempNode = searchNode(nodeKeyk);
+	  WAVLNode WAVL_tempNode = searchNode(nodeKey);
 	  if(WAVL_tempNode!=null){
 		  return WAVL_tempNode.info;
 	  }else{
@@ -121,14 +107,12 @@ public class WAVLTree {
   
   /**
    * private  WAVLNode searchNode(int nodeKey)
-   *
-   * returns the node with a key = nodeKey if it exists in the tree
-   * otherwise, returns null
-   * 
-   * time complexity: O(log(n))
-   * 
-   * @pre: none
-   * @post: none 
+   * @return the node with a key = nodeKey if it exists in the tree. 
+   * otherwise, returns null.
+   * @complexity O(log(n))
+   * @param nodeKey the key of the node you are searching for.
+   * @pre none
+   * @post none 
    */
   private  WAVLNode searchNode(int nodeKey)
   {
@@ -144,32 +128,28 @@ public class WAVLTree {
 
 /**
    * private  WAVLNode searchInsertionPlace(int nodeKey)
-   *
-   * returns the node of an key nodeKey or where it should be added.
-   * if empty, returns null
-   * 
-   * time complexity: O(log(n))
-   * 
-   * @pre: none
-   * @post: none 
+   * @return the node of an key nodeKey or where it should be added. 
+   * if tree is empty, returns null.
+   * @param nodeKey the key of the node you are searching for.
+   * @complexity O(log(n))
+   * @pre none
+   * @post none 
    */
   private WAVLNode searchInsertionPlace(int nodeKey)
   {
 	  if(empty()){return null;} //no nodes, then nothing to return.
 	  
 	  WAVLNode WAVL_tempNode = WAVL_root;
-	  while (WAVL_tempNode.key != nodeKey)
-	  {
-		  if(WAVL_tempNode.key>nodeKey) // we need to search in the left side.
-		  {
-			  if(WAVL_tempNode.leftNode.isExternalLeaf()) // we reached the end of the branch
+	  while (WAVL_tempNode.key != nodeKey){
+		  if(WAVL_tempNode.key>nodeKey){					// we need to search in the left side.
+			  if(WAVL_tempNode.leftNode.isExternalLeaf()) 		// if true we reached the end of the branch.
 			  {
 				  return WAVL_tempNode;
 			  }else{
 				  WAVL_tempNode=WAVL_tempNode.leftNode;
 			  }
-		  }else{ // we need to search in the right side.
-			  if(WAVL_tempNode.rightNode.isExternalLeaf()) // we reached the end of the branch
+		  }else{ 											// we need to search in the right side.
+			  if(WAVL_tempNode.rightNode.isExternalLeaf()) 		// if true we reached the end of the branch
 			  {
 				  return WAVL_tempNode;
 			  }else{
@@ -180,38 +160,34 @@ public class WAVLTree {
 	  return WAVL_tempNode;
   }
 
-/**
+   /**
    * private WAVLNode getSmallestNode()
-   * 
-   * time complexity: O(log(n))
-   * Returns pointer of the node with the smallest key in the tree
+   * @return pointer of the node with the smallest key in the tree. 
    * or null if the tree is empty.
-   * @pre: none
-   * @post: none 
+   * @complexity O(log(n))
+   * @pre none
+   * @post none 
    */
-  
   private WAVLNode getSmallestNode()
   {
 	  if(empty())
 	  {
 		 return null; 
-	  }else{
-		 WAVLNode WAVL_tempNode = WAVL_root;
-		 while(WAVL_tempNode.leftNode!=WAVL_emptyNode) // going all the way down the left side of the tree
-		 {
-			 WAVL_tempNode=WAVL_tempNode.leftNode;
-		 }
-		 return WAVL_tempNode;
 	  }
+	 WAVLNode WAVL_tempNode = WAVL_root;
+	 while(WAVL_tempNode.leftNode!=WAVL_emptyNode){ // going all the way down the left side of the tree
+		 WAVL_tempNode=WAVL_tempNode.leftNode;
+	 }
+	 return WAVL_tempNode;
   }
 
-/**
+   /**
    * public int[] keysToArray()
-   * 
-   * time complexity: O(n)
-   * returns a sorted array which contains all keys in the tree, or an empty array if the tree is empty.
-   * @pre: none
-   * @post: none 
+   * @return a sorted array which contains all keys in the tree,
+   * or an empty array if the tree is empty.
+   * @complexity O(n)
+   * @pre none
+   * @post none 
    */
   public int[] keysToArray()
   {
@@ -229,12 +205,11 @@ public class WAVLTree {
 
 /**
    * public String[] infoToArray()
-   *
-   * time complexity: O(n)
-   * returns an array which contains the info of each key in the tree sorted respectively,
+   * @return an array which contains the info of each key in the tree sorted respectively,
    * or an empty array if the tree is empty.
-   * @pre: none
-   * @post: none 
+   * @complexity: O(n)
+   * @pre none
+   * @post none 
    */
   public String[] infoToArray()
   {
@@ -251,45 +226,45 @@ public class WAVLTree {
   }
 
 /**
-   * public int insert(int k, String i)
-   * 
-   * time complexity: O(log(n))
-   * inserts an item with key k and info i to the WAVL tree.
+   * public int insert(int nodeKey, String nodeInfo)
+   * inserts an item with key nodeKey and info nodeInfo to the WAVL tree.
    * the tree must remain valid (keep its invariants).
-   * returns the number of rebalancing operations, or 0 if no rebalancing operations were necessary.
-   * returns -1 if an item with key k already exists in the tree.
-   * @pre: item to insert, consisted of key k and info i.
-   * @post: the WAVL Tree now has the new node, if the key didn't exist already in the tree. 
+   * @return the number of rebalancing operations,
+   * returns -1 if an item with key nodeKey already exists in the tree.
+   * @complexity O(log(n))
+   * @param nodeKey key of the new node
+   * @param nodeInfo key of the new node
+   * @pre none
+   * @post the WAVL Tree now has the new node, if the key didn't exist already in the tree. 
    */
-   public int insert(int k, String i) 
-   {
-	   if(empty())  //if empty: Start a new tree.
-	   {	
-		   startNewRoot(k, i);
+   public int insert(int nodeKey, String nodeInfo){
+	   if(empty()){  										//if empty: Start a new tree.
+		   startNewRoot(nodeKey, nodeInfo);
 		   return 0;
 	   }					
-	   WAVLNode parent = searchInsertionPlace(k); 	//finds the desired insertion place.
-	   if (parent.key == k)
-	   {	
-		   return -1; //if already exist: return -1.
+	   WAVLNode parent = searchInsertionPlace(nodeKey); 	//if not: finds the desired insertion place.
+	   if (parent.key == nodeKey){	
+		   return -1; 											//if already exist: return -1.
 	   }										
-	   return addNewLeaf(parent, k, i);	//add the new leaf.
+	   return addNewLeaf(parent, nodeKey, nodeInfo);			//if not: add the new leaf.
    }
 
 /**
-    * private int addNewLeaf(WAVLNode parent, int k, String i)
-    *
-    * time complexity: O(log(n))
+    * private int addNewLeaf(WAVLNode parent, int nodeKey, String nodeInfo)
     * create a new leaf node with key k and info i under parent.
     * returns # of rebalances.
-    * @pre: receives place to insert, key and info of the new leaf.
-    * @post: the tree now has the new leaf.
+    * @complexity O(1)
+    * @param parent pointer to the new node parent.
+    * @param nodeKey key of the new node
+    * @param nodeInfo info of the new node
+    * @pre receives legal place to insert, key and info of the new leaf.
+    * @post the tree now has the new leaf.
     */
-   private int addNewLeaf(WAVLNode parent, int k, String i){ 
+   private int addNewLeaf(WAVLNode parent, int nodeKey, String nodeInfo){ 
 	   size++;
 	   boolean parentIsLeaf = parent.isLeaf();
-	   WAVLNode node = new WAVLNode(parent,WAVL_emptyNode,WAVL_emptyNode,1,k,i);
-	   if(parent.key>k){
+	   WAVLNode node = new WAVLNode(parent,WAVL_emptyNode,WAVL_emptyNode,1,nodeKey,nodeInfo);
+	   if(parent.key>nodeKey){
 		  parent.leftNode = node;
 	   }else{
 		   parent.rightNode = node;
@@ -302,13 +277,13 @@ public class WAVLTree {
    }
 
 /**
-    * private int promote(WAVLNode WAVL_Node)
-    *
-    * worst case time complexity: O(log(n)).
+    * private int promote(WAVLNode node)
     * promote the node and fixes the tree if needed.
-    * return number of rebalances.
-    * @pre: none
-    * @post: none
+    * @complexity worst case: O(log(n)).
+    * @return number of rebalances.
+    * @param node the node you want to promote.
+    * @pre node!=null
+    * @post promoted node rank, and made tree a legal WAVL tree
     */
    private int promote(WAVLNode node)
    {
@@ -360,11 +335,10 @@ public class WAVLTree {
 
 	/**
 	 * private void fixRanksAfterRotate(WAVLNode newParent, WAVLNode lastParent)
-	 *
-	 * time complexity - O(1)
 	 * fix ranks after rotate.
-	 * @pre: old and new parent nodes.
-	 * @post: node rank differences are correct now.
+	 * @complexity O(1)
+	 * @pre none
+	 * @post node rank differences are correct now.
 	 */
 	private void fixRanksAfterRotate(WAVLNode newParent, WAVLNode lastParent){
 		   newParent.rankDiff = lastParent.rankDiff;
@@ -375,11 +349,10 @@ public class WAVLTree {
 	
 	/**
     * private void fixRanksAfterDoubleRotate(WAVLNode newParent, WAVLNode lastParent)
-    *
-	* time complexity - O(1)
-	* fix ranks after double rotate.
-	* @pre: old and new parent nodes.
-	* @post: node rank differences are correct now.    
+    * fix ranks after double rotate.
+	* @complexity O(1)
+	* @pre old and new parent nodes.
+	* @post node rank differences are correct now.    
     */
    private void fixRanksAfterDoubleRotate(WAVLNode newParent, WAVLNode lastParent){
 	   newParent.rankDiff = lastParent.rankDiff;
@@ -390,32 +363,28 @@ public class WAVLTree {
    
 /**
     * private void createNewRoot(int k, String i)
-    *
-	* time complexity - O(1)
     * create a new root node with key k and info i
-    * @pre: tree is currently empty
-    * @post: tree is now of size 1 and its root is a node with key k and info i.
+	* @complexity O(1)
+    * @pre tree is currently empty
+    * @post tree is now of size 1 and its root is a node with key k and info i.
     */
    
-   private void startNewRoot(int k, String i){
-	   WAVL_root = new WAVLNode(null, WAVL_emptyNode, WAVL_emptyNode, 1, k ,i);
+   private void startNewRoot(int nodeKey, String nodeInfo){
+	   WAVL_root = new WAVLNode(null, WAVL_emptyNode, WAVL_emptyNode, 1, nodeKey ,nodeInfo);
 	   size = 1;
    }
 
 /**
    * public int delete(int k)
-   *
-   * time complexity - O(log(n))
    * deletes an item with key k from the binary tree, if it is there;
-   * the tree must remain valid (keep its invariants).
-   * returns the number of rebalancing operations, or 0 if no rebalancing operations were needed.
+   * @complexity O(log(n))
+   * @return the number of rebalancing operations, 
    * returns -1 if an item with key k was not found in the tree.
-   * @pre: none.
-   * @post: if the tree had a node with key k, it now doesn't, and the tree is a valid WAVL tree.
+   * @pre none
+   * @post if the tree had a node with key k, it now doesn't, and the tree is a valid WAVL tree.
    */
-   public int delete(int k)
-   {
-	   WAVLNode deleteNode = searchNode(k); // finds the node we wish to delete
+   public int delete(int nodeKey){
+	   WAVLNode deleteNode = searchNode(nodeKey); // finds the node we wish to delete
 	   if(deleteNode == null){
 		   return -1;
 	   }else{
@@ -431,13 +400,12 @@ public class WAVLTree {
    
    /**
     * private int deleteUnaryNode(WAVLNode deleteNode)
-    *
-    * time complexity - O(log(n))
     * delete the node deleteNode from the WAVL tree.
-    * returns the number of rebalancing operations, or 0 if no rebalancing operations were needed.
-    * @pre: tree.size!=0
-    * @pre: node is an unary node
-    * @post: return number of rebalancing operations.
+    * @complexity O(log(n))
+    * @return the number of rebalancing operations.
+    * @pre tree.size!=0
+    * @pre node is an unary node
+    * @post return number of rebalancing operations.
     */
    private int deleteUnaryNode(WAVLNode deleteNode){
 	   if(deleteNode.rightNode.isExternalLeaf()){
@@ -452,110 +420,32 @@ public class WAVLTree {
    
    /**
     * private int deleteLeafNode(WAVLNode deleteNode)
-    *
-    * time complexity - O(log(n))
     * delete the node deleteNode from the WAVL tree.
-    * returns the number of rebalancing operations, or 0 if no rebalancing operations were needed.
-    * @pre: tree.size!=0
-    * @pre: node is a leaf
-    * @post: return number of rebalancing operations.
+    * @complexity O(log(n))
+    * @return the number of rebalancing operations, or 0 if no rebalancing operations were needed.
+    * @pre tree.size!=0 && node is a leaf
+    * @post return number of rebalancing operations.
     */
    private int deleteLeafNode(WAVLNode deleteNode){
+	   size --;
 	   int rebalancingCounter = 0; 
-	   WAVLNode deleteNodeParent = deleteNode.parentNode;
-	   WAVLNode partnerNode = deleteNode.getPartner();
-	   int partnerNode_rankDiff = partnerNode.rankDiff;
-	   if(partnerNode.isExternalLeaf())
-	   {
-		   partnerNode_rankDiff = 2;
+	   WAVLNode deleteNodeParent;
+	   rebalancingCounter = demote(deleteNode,rebalancingCounter); 	// change leaf rank from 0 to -1 and adjust WAVL tree.
+	   deleteNodeParent = deleteNode.parentNode;
+	   if(deleteNodeParent.isUnary() && deleteNode.rankDiff==2){
+		   rebalancingCounter = demote(deleteNode,rebalancingCounter);// adjust deleteNodeParent rank to be 0 instead of 1.
 	   }
-	
-		// case 1: deleteNode is a leaf and we don't need to demote its father.
-	   if(deleteNode.rankDiff == 1 && partnerNode_rankDiff == 1){		   
-		   deleteNodeLeafFromParent(deleteNode);
-		   size --;
-		   return rebalancingCounter;
-	   }
-	   
-	   // case2 : parent's other child is external leaf and deleteNode is leaf
-	   if(deleteNode.rankDiff == 1 && partnerNode.isExternalLeaf()){
-		   deleteNodeLeafFromParent(deleteNode);
-		   size --;
-		   return demote(deleteNodeParent,rebalancingCounter);
-	   }
-	   
-	   // case 3: two leaves with rank difference two.
-	   if(deleteNode.rankDiff == 2 && partnerNode_rankDiff==2){
-		   deleteNodeLeafFromParent(deleteNode);
-		   partnerNode.rankDiff = 1;
-		   size --;
-		   return demote(deleteNodeParent,rebalancingCounter);
-	   }
-	   
-		WAVLNode partnerNode_externalChild,partnerNode_internalChild;
-		if(deleteNode.isLeftNode()){
-			partnerNode_externalChild = partnerNode.rightNode;
-			partnerNode_internalChild = partnerNode.leftNode;
-		}else{
-			partnerNode_externalChild = partnerNode.leftNode;
-			partnerNode_internalChild = partnerNode.rightNode;
-		}
-	   
-	   // case 4: one is a leaf and the other child's external child has rank difference of one and 
-	   // the internal child has rank difference of one or two.
-	   if(partnerNode_externalChild.rankDiff == 1 && !partnerNode_externalChild.isExternalLeaf()){
-		   if(deleteNode.isLeftNode()){
-			   deleteNodeLeafFromParent(deleteNode);
-			   WAVLNode topNode = rotateLeft(deleteNodeParent);
-			   topNode.rankDiff = topNode.leftNode.rankDiff;
-			   topNode.leftNode.rankDiff = 1;
-			   if(topNode.leftNode.isLeaf()){
-				   topNode.leftNode.rankDiff = 2;
-			   }
-			   topNode.rightNode.rankDiff = 2;
-		   }else{
-			   deleteNodeLeafFromParent(deleteNode);
-			   WAVLNode topNode = rotateRight(deleteNodeParent);
-			   topNode.rankDiff = topNode.rightNode.rankDiff;
-			   topNode.rightNode.rankDiff = 1;
-			   if(topNode.rightNode.isLeaf()){
-				   topNode.rightNode.rankDiff = 2;
-			   }
-			   topNode.leftNode.rankDiff = 2;
-		   }
-		   size --;
-		   return rebalancingCounter + 1;    
-	   }
-	   
-	   // case 5: one is a leaf and the other child's external child has rank difference
-	   // of two or an external leaf and the internal child has rank difference of one.	   
-	   if((partnerNode_externalChild.rankDiff == 2 || partnerNode_externalChild.isExternalLeaf())
-			   && partnerNode_internalChild.rankDiff == 1){
-		   WAVLNode topNode;
-		   if(deleteNode.isLeftNode()){
-			   deleteNodeLeafFromParent(deleteNode);
-			   topNode = doubleRotateRightLeft(deleteNodeParent);
-			   topNode.rankDiff = topNode.leftNode.rankDiff;
-		   }else{
-			   deleteNodeLeafFromParent(deleteNode);
-			   topNode = doubleRotateLeftRight(deleteNodeParent);
-			   topNode.rankDiff = topNode.rightNode.rankDiff;
-		   }
-		   topNode.leftNode.rankDiff = 2;
-		   topNode.rightNode.rankDiff = 2;
-		   size --;
-		   return rebalancingCounter + 2; 
-	   }
+	   deleteNodeLeafFromParent(deleteNode);						// delete node
 	   return rebalancingCounter;
    }
    
    /**
     * private void deleteLeafFromParent(WAVLNode deleteNode)
-    *
-    * time complexity - O(1)
     * deletes the node deleteNode from the WAVL tree.
-    * @pre: deleteNode is a leaf and not root.
-	* @post: deleteNode was replaced as an emptyNode.
+    *
+    * @complexity O(1)
+    * @pre deleteNode is a leaf and not root.
+	* @post deleteNode was replaced as an emptyNode.
     */
    private void deleteNodeLeafFromParent(WAVLNode deleteNode){
 	   if(deleteNode.isLeftNode()){ //is left child
@@ -568,11 +458,9 @@ public class WAVLTree {
    
    /**
     * private int deleteNode(WAVLNode deleteNode)
-    *
-    * time complexity - O(log(n))
     * delete the node deleteNode from the WAVL tree.
-    * the tree must remain valid (keep its invariants).
-    * returns the number of rebalancing operations, or 0 if no rebalancing operations were needed.
+    * @return the number of rebalancing operations.
+    * @complexity  O(log(n))
     * @pre - deleteNode exists in the tree
     * @post - the tree doesn't have deleteNode anymore and is a valid WAVL tree.
     */
@@ -597,11 +485,11 @@ public class WAVLTree {
 
 /**
     * private static void swap(WAVLNode node)
-    *
-    * time complexity - O(1)
     * swap the nodes.
-    * @pre: node1 and node2 are not null.
-    * @post: the two nodes were swapped.
+    *
+    * @complexity  O(1)
+    * @pre node1 and node2 are not null.
+    * @post the two nodes were swapped.
     */
    private static void swap(WAVLNode node1 , WAVLNode node2)
    {
@@ -614,37 +502,36 @@ public class WAVLTree {
    }
 /**
     * private static void demote(WAVLNode node)
-    *
-    * worst case time complexity - O(log(n))
     * demotes the node.
-    * returns how many rebalancing actions were taken.
-    * @pre: deleteNode is not null
-    * @post: the rank differences in the tree are correct now.
+    * @complexity worst case time O(log(n))
+    * @return how many rebalancing actions were taken.
+    * @pre deleteNode is not null
+    * @post the rank differences in the tree are correct now.
     */
-   private int demote(WAVLNode deleteNode , int rebalancingCounter)
+   private int demote(WAVLNode node , int rebalancingCounter)
    {
 	    WAVLNode partnerNode;
- 	    WAVLNode deleteNodeParent;
+ 	    WAVLNode nodeParent;
  	    WAVLNode partnerNode_externalChild,partnerNode_internalChild;
 	    WAVLNode topNode;
-	   	while(deleteNode!=WAVL_root){ // "In the end, it doesn't even matter"
+	   	while(node!=WAVL_root){ // "In the end, it doesn't even matter"
 			// case 1: node rank difference is 1
-	   		deleteNodeParent = deleteNode.parentNode;
-	   		partnerNode = deleteNode.getPartner();
-			if(deleteNode.rankDiff==1){
-				deleteNode.rankDiff=2;
+	   		nodeParent = node.parentNode;
+	   		partnerNode = node.getPartner();
+			if(node.rankDiff==1){
+				node.rankDiff=2;
 				return rebalancingCounter+1;
 			}
-			
+						
 			// case 2: both node and partner node has rank difference 2
-			if(deleteNode.rankDiff == 2 && partnerNode.rankDiff == 2){
+			if(node.rankDiff == 2 && (partnerNode.rankDiff == 2 || partnerNode.isExternalLeaf())){
 				partnerNode.rankDiff = 1;
 				rebalancingCounter ++;
-				deleteNode = deleteNode.parentNode;
+				node = node.parentNode;
 				continue;
 			}
 			
-			if(deleteNode.isLeftNode()){
+			if(node.isLeftNode()){
 				partnerNode_externalChild = partnerNode.rightNode;
 				partnerNode_internalChild = partnerNode.leftNode;
 			}else{
@@ -657,15 +544,15 @@ public class WAVLTree {
 				partnerNode_externalChild.rankDiff = 1;
 				partnerNode_internalChild.rankDiff = 1;
 				rebalancingCounter +=2;
-				deleteNode = deleteNode.parentNode;
+				node = node.parentNode;
 				continue;
 			}
 			
 		   // case 4: node is with rank difference 2, and partner with 1, external child has rank difference of one and 
 		   // the internal child has rank difference of one or two.
 		   if(partnerNode_externalChild.rankDiff == 1 && !partnerNode_externalChild.isExternalLeaf()){
-			   if(deleteNode.isLeftNode()){
-				   topNode = rotateLeft(deleteNodeParent);
+			   if(node.isLeftNode()){
+				   topNode = rotateLeft(nodeParent);
 				   topNode.rankDiff = topNode.leftNode.rankDiff;
 				   topNode.leftNode.rankDiff = 1;
 				   if(topNode.leftNode.isLeaf())
@@ -674,7 +561,7 @@ public class WAVLTree {
 				   }
 				   topNode.rightNode.rankDiff = 2;
 			   }else{
-				   topNode = rotateRight(deleteNodeParent);
+				   topNode = rotateRight(nodeParent);
 				   topNode.rankDiff = topNode.rightNode.rankDiff;
 				   topNode.leftNode.rankDiff = 2;
 				   topNode.rightNode.rankDiff = 1;
@@ -690,11 +577,11 @@ public class WAVLTree {
 		   // of 2 or an external leaf and the internal child has rank difference of 1.	   
 		   if((partnerNode_externalChild.rankDiff == 2 || partnerNode_externalChild.isExternalLeaf())
 				   && partnerNode_internalChild.rankDiff == 1){
-			   if(deleteNode.isLeftNode()){
-				   topNode = doubleRotateRightLeft(deleteNodeParent);
+			   if(node.isLeftNode()){
+				   topNode = doubleRotateRightLeft(nodeParent);
 				   topNode.rankDiff = topNode.leftNode.rankDiff;
 			   }else{
-				   topNode = doubleRotateLeftRight(deleteNodeParent);
+				   topNode = doubleRotateLeftRight(nodeParent);
 				   topNode.rankDiff = topNode.rightNode.rankDiff;
 			   }
 			   topNode.leftNode.rankDiff = 2;
@@ -709,12 +596,10 @@ public class WAVLTree {
 
     /**
     * private WAVLNode rotateLeft(WAVLNode node)
-    *
-    * time complexity - O(1)
     * performs a left rotation of the tree.
-    *
-    * @pre: receives the node which needs to be rotated down.
-    * @post: left rotation was done.
+    * @complexity  O(1)
+    * @pre receives the node which needs to be rotated down.
+    * @post left rotation was done.
     */
    private WAVLNode rotateLeft(WAVLNode node)
    {
@@ -739,12 +624,10 @@ public class WAVLTree {
    
    /**
     * private WAVLNode rotateRight(WAVLNode node)
-    *
-    * time complexity - O(1)
     * performs a right rotation of the tree.
-    *
-    * @pre: receives the node which needs to be rotated down.
-    * @post: right rotation was done.
+    * @complexity  O(1)
+    * @pre receives the node which needs to be rotated down.
+    * @post right rotation was done.
     */
    private WAVLNode rotateRight(WAVLNode node)
    {
@@ -769,12 +652,10 @@ public class WAVLTree {
    
    /**
     * private WAVLNode doubleRotateLeftRight(WAVLNode node)
-    *
-    * time complexity - O(1)
     * performs a left rotation and then right rotation of the tree.
-    *
-    * @pre: receives the node which needs to be rotated down.
-    * @post: double left right rotation was done.
+    * @complexity  O(1)
+    * @pre receives the node which needs to be rotated down.
+    * @post double left right rotation was done.
     */
    private WAVLNode doubleRotateLeftRight(WAVLNode node)
    {
@@ -784,12 +665,10 @@ public class WAVLTree {
    
    /**
     * private WAVLNode doubleRotateRightLeft(WAVLNode node)
-    *
-    * time complexity - O(1)
     * performs a right rotation and then left rotation of the tree.
-    *
-    * @pre: receives the node which needs to be rotated down.
-    * @post: double right left rotation was done.
+    * @complexity  O(1)
+    * @pre receives the node which needs to be rotated down.
+    * @post double right left rotation was done.
     */
    private WAVLNode doubleRotateRightLeft(WAVLNode node)
    {
@@ -835,9 +714,8 @@ public class WAVLTree {
 	  
 	  /**
 	  * public boolean isLeaf()
-	  * 
-	  * time complexity - O(1)
 	  * return true if Node has no children.
+	  * @complexity  O(1)
 	  * @pre - none.
 	  * @post - none.
 	  */
@@ -848,9 +726,8 @@ public class WAVLTree {
 	  
 	  /**
 	  * public boolean isUnary()
-	  * 
-	  * time complexity - O(1)
 	  * return true if Node has only one children
+	  * @complexity  O(1)
 	  * @pre - none.
 	  * @post - none.
 	  */
@@ -864,9 +741,8 @@ public class WAVLTree {
 	  
 	  /**
 	  * public boolean isJunction()
-	  * 
-	  * time complexity - O(1)
 	  * return true if Node has two children
+	  * @complexity  O(1)
 	  * @pre - none.
 	  * @post - none.
 	  */
@@ -876,9 +752,8 @@ public class WAVLTree {
 	  }
 	  
 	  /** public boolean isExternalLeaf()
-	  * 
-	  * time complexity - O(1)
-	  * return true if Node is an external leaf.
+	   * return true if Node is an external leaf.
+	  * @complexity  O(1)
 	  * @pre - node is not the root.
 	  * @post - none.
 	  */
@@ -888,12 +763,10 @@ public class WAVLTree {
 	  }
 	  
 	  /** public boolean isLeftNode()
-	  * 
-	  * time complexity - O(1)
-	  * returns whether the node is a left node. 
-	  * 
-	  * @pre: node is not the root.
-	  * @post: none.
+	   * returns whether the node is a left node. 
+	  * @complexity  O(1)
+	  * @pre node is not the root.
+	  * @post none.
 	  */
 	  public boolean isLeftNode()
 	  {
@@ -901,11 +774,10 @@ public class WAVLTree {
 	  }
 	  
 	  /** public WAVLNode getPartner()
-	  * 
-	  * time complexity - O(1)
-	  * return the node's brother node if exist or null otherwise.
-	  * @pre: none.
-	  * @post: none.
+	   * return the node's brother if exist or null otherwise.
+	  * @complexity  O(1)
+	  * @pre none.
+	  * @post none.
 	  */
 	  public WAVLNode getPartner()
 	  {
@@ -921,12 +793,10 @@ public class WAVLTree {
 	  
 	  /**
 	   * TODO what happens if we have only one node in the tree? is it ok to return itself? - 
-	   * TODO ^Ido: no. it return null.
+	   * TODO ^Ido: no. it should return null.
 	   * private WAVLNode getSuccessor()
-	   * 
 	   * Returns pointer of the first node with a bigger key then WAVL_Node.
-	   * 
-	   * worst case time complexity - O(log(n)), average time complexity - O(1)
+	   * @complexity worst case O(log(n)), amortize time - O(1)
 	   * @pre - none.
 	   * @post - none.
 	   */
@@ -954,9 +824,8 @@ public class WAVLTree {
 	  
 	  /**
 	  * private WAVLNode getPredecessor(WAVLNode WAVL_Node)
-	  * 
-	  * worst case time complexity - O(log(n)), average time complexity - O(1)
 	  * Returns pointer of the first node with a bigger key then WAVL_Node 
+	  * @complexity  worst case O(log(n)), amortize time - O(1)
 	  * @pre - none.
 	  * @post - none.
 	  */

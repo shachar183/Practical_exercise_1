@@ -6,8 +6,11 @@ public class WAVLTree_Tester {
 	
 	public static void main(String[] args) {
 		//create a random tree and test if there are any error while inserting the items.
-		WAVLTree test_tree =example_random_tree_creator(10000,100000000);
-		example_random_tree_deleter(test_tree, 100000, 100000000);
+		WAVLTree test_tree = new WAVLTree();;
+		for(int i= 0; i<1000000; i++){
+			example_random_tree_insertor(test_tree,10,500);
+			example_random_tree_deletor(test_tree, 100, 500);
+		}
 		
 		System.out.println("__________________________________________________________________");
 		System.out.println("");
@@ -62,10 +65,10 @@ public class WAVLTree_Tester {
 		return tree;
 	}
 	
-	public static WAVLTree example_random_tree_creator(int randomInsertionNumber, int randomMaxInteger){
-		WAVLTree tree = new WAVLTree();
+	public static WAVLTree example_random_tree_insertor(WAVLTree tree,int randomInsertionNumber, int randomMaxInteger){
 		Random random = new Random();
 		int lastKey;
+		int lastTreeSize =tree.size();
 		for(int i = 0; i < randomInsertionNumber; i++){
 			tree.insert(lastKey = random.nextInt(randomMaxInteger), "info");
 			if(!tree.testTreeRanks()){
@@ -73,14 +76,14 @@ public class WAVLTree_Tester {
 				return tree;
 			}
 		}
-		System.out.println("Finished inserting " + tree.size() + " random items to a new WAVL tree without any errors.");
+//		System.out.println("Finished inserting 	" + (tree.size()-lastTreeSize) + "	 random items to tree without any errors.");
 		return tree;
 	}
 	
-	public static WAVLTree example_random_tree_deleter(WAVLTree tree,int randomDeletionNumber, int randomMaxInteger){
-		randomDeletionNumber = Math.min(tree.size(), randomDeletionNumber);
+	public static WAVLTree example_random_tree_deletor(WAVLTree tree,int randomDeletionNumber, int randomMaxInteger){
 		Random random = new Random();
 		int lastKey;
+		int lastTreeSize =tree.size();
 //		printBinaryTree(tree.WAVL_root, 0,tree.WAVL_emptyNode);
 
 		for(int i = 0; i < randomDeletionNumber; i++){
@@ -91,14 +94,13 @@ public class WAVLTree_Tester {
 //				System.out.println("__________________________________________________________________");
 //				System.out.println("");
 //				printBinaryTree(tree.WAVL_root, 0,tree.WAVL_emptyNode);
-				
 				if(!tree.testTreeRanks()){
 					System.out.println("Error in rebalancing after deleting item key " + lastKey);
 					return tree;
 				}
 			}
 		}
-		System.out.println("Finished delete " + tree.size() + " random items to a new WAVL tree without any errors.");
+//		System.out.println("Finished deleting	" + (lastTreeSize-tree.size()) + "	 random items to tree without any errors.");
 		return tree;
 	}
 	public static void printBinaryTree(WAVLTree.WAVLNode root, int level, WAVLTree.WAVLNode empty){
