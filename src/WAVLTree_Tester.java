@@ -6,8 +6,12 @@ public class WAVLTree_Tester {
 	
 	public static void main(String[] args) {
 		//create a random tree and test if there are any error while inserting the items.
-		WAVLTree test_tree =example_random_tree_creator(1000,1000000000);
+		WAVLTree test_tree =example_random_tree_creator(10000,100000000);
+		example_random_tree_deleter(test_tree, 100000, 100000000);
 		
+		System.out.println("__________________________________________________________________");
+		System.out.println("");
+
 		// creating a tree and testing it for min, max, search.
 		test_tree = example_tree_creator();
 		if(!test_tree.min().equals("1")){
@@ -44,8 +48,6 @@ public class WAVLTree_Tester {
 			System.out.println("error 10: in size function");
 		}
 		System.out.println("Done!");
-		test_tree = example_random_tree_creator(25,100);
-		printBinaryTree(test_tree.WAVL_root, 0,test_tree.WAVL_emptyNode);
 	}
 	
 	public static WAVLTree example_tree_creator(){
@@ -75,6 +77,30 @@ public class WAVLTree_Tester {
 		return tree;
 	}
 	
+	public static WAVLTree example_random_tree_deleter(WAVLTree tree,int randomDeletionNumber, int randomMaxInteger){
+		randomDeletionNumber = Math.min(tree.size(), randomDeletionNumber);
+		Random random = new Random();
+		int lastKey;
+//		printBinaryTree(tree.WAVL_root, 0,tree.WAVL_emptyNode);
+
+		for(int i = 0; i < randomDeletionNumber; i++){
+			if(tree.delete(lastKey = random.nextInt(randomMaxInteger))!=-1){
+//				System.out.println("__________________________________________________________________");
+//				System.out.println("");
+//				System.out.println("deleting item " + lastKey);
+//				System.out.println("__________________________________________________________________");
+//				System.out.println("");
+//				printBinaryTree(tree.WAVL_root, 0,tree.WAVL_emptyNode);
+				
+				if(!tree.testTreeRanks()){
+					System.out.println("Error in rebalancing after deleting item key " + lastKey);
+					return tree;
+				}
+			}
+		}
+		System.out.println("Finished delete " + tree.size() + " random items to a new WAVL tree without any errors.");
+		return tree;
+	}
 	public static void printBinaryTree(WAVLTree.WAVLNode root, int level, WAVLTree.WAVLNode empty){
 	    if(root==null || root == empty)
 	         return;
