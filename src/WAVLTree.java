@@ -33,10 +33,11 @@ public class WAVLTree {
    /**
     * public int size()
     *
-    * Returns the number of nodes in the tree.
+    * returns the number of nodes in the tree.
     *
-    * precondition: none
-    * postcondition: none
+    * time complexity: O(1)
+    * @pre: none
+    * @post: none
     */
    public int size()
    {
@@ -56,8 +57,11 @@ public class WAVLTree {
    /**
    * public String min()
    *
-   * Returns the info of the item with the smallest key in the tree,
+   * time complexity: O(log(h))
+   * returns the info of the item with the smallest key in the tree,
    * or null if the tree is empty
+   * @pre: none
+   * @post: none
    */
   public String min()
   {
@@ -71,8 +75,11 @@ public class WAVLTree {
 /**
     * public String max()
     *
-    * Returns the info of the item with the largest key in the tree,
+    * time complexity: O(log(h))
+    * returns the info of the item with the largest key in the tree,
     * or null if the tree is empty.
+    * @pre: none
+    * @post: none 
     */
   public String max()
   {
@@ -88,15 +95,17 @@ public class WAVLTree {
 
 /**
    * public String search(int k)
-   *
+   * 
+   * time complexity: O(log(h))
    * returns the info of an item with key k if it exists in the tree
    * otherwise, returns null
+   * @pre: none
+   * @post: none 
    */
   public String search(int k)
   {
 	  WAVLNode WAVL_tempNode = searchNode(k);
-	  if(WAVL_tempNode!=null)
-	  {
+	  if(WAVL_tempNode!=null){
 		  return WAVL_tempNode.info;
 	  }else{
 		  return null;
@@ -106,8 +115,11 @@ public class WAVLTree {
   /**
    * private  WAVLNode searchNode(int k)
    *
+   * time complexity: O(log(h))
    * returns the node of an key k if it exists in the tree
    * otherwise, returns null
+   * @pre: none
+   * @post: none 
    */
   private  WAVLNode searchNode(int k)
   {
@@ -127,8 +139,11 @@ public class WAVLTree {
 /**
    * private  WAVLNode searchInsertionPlace(int k)
    *
+   * time complexity: O(log(h))
    * returns the node of an key k or where k should be added.
    * otherwise, returns null
+   * @pre: none
+   * @post: none 
    */
   private WAVLNode searchInsertionPlace(int k)
   {
@@ -138,16 +153,16 @@ public class WAVLTree {
 		  WAVLNode WAVL_tempNode = WAVL_root;
 		  while (WAVL_tempNode.key != k)
 		  {
-			  if(WAVL_tempNode.key>k)
+			  if(WAVL_tempNode.key>k) // we need to search in the left side.
 			  {
-				  if(WAVL_tempNode.leftNode.isExternalLeaf())
+				  if(WAVL_tempNode.leftNode.isExternalLeaf()) // we reached the end of the branch
 				  {
 					  return WAVL_tempNode;
 				  }else{
 					  WAVL_tempNode=WAVL_tempNode.leftNode;
 				  }
-			  }else{
-				  if(WAVL_tempNode.rightNode.isExternalLeaf())
+			  }else{ // we need to search in the right side.
+				  if(WAVL_tempNode.rightNode.isExternalLeaf()) // we reached the end of the branch
 				  {
 					  return WAVL_tempNode;
 				  }else{
@@ -161,11 +176,13 @@ public class WAVLTree {
   }
 
 /**
-   * private WAVLNode getSmallestNode
+   * private WAVLNode getSmallestNode()
    * 
+   * time complexity: O(log(h))
    * Returns pointer of the node with the smallest key in the tree
-   * 
    * or null if the tree is empty.
+   * @pre: none
+   * @post: none 
    */
   
   private WAVLNode getSmallestNode()
@@ -175,7 +192,7 @@ public class WAVLTree {
 		 return null; 
 	  }else{
 		 WAVLNode WAVL_tempNode = WAVL_root;
-		 while(WAVL_tempNode.leftNode!=WAVL_emptyNode)
+		 while(WAVL_tempNode.leftNode!=WAVL_emptyNode) // going all the way down the left side of the tree
 		 {
 			 WAVL_tempNode=WAVL_tempNode.leftNode;
 		 }
@@ -185,9 +202,11 @@ public class WAVLTree {
 
 /**
    * public int[] keysToArray()
-   *
-   * Returns a sorted array which contains all keys in the tree,
-   * or an empty array if the tree is empty.
+   * 
+   * time complexity: O(n)
+   * returns a sorted array which contains all keys in the tree, or an empty array if the tree is empty.
+   * @pre: none
+   * @post: none 
    */
   public int[] keysToArray()
   {
@@ -198,18 +217,19 @@ public class WAVLTree {
       {
 	        arr[counter]=WAVL_tempNode.key;
 	        counter++;
-	        
 	        WAVL_tempNode = WAVL_tempNode.getSuccessor();
-		}
+      }
       return arr;  
   }
 
 /**
    * public String[] infoToArray()
    *
-   * Returns an array which contains all info in the tree,
-   * sorted by their respective keys,
+   * time complexity: O(n)
+   * returns an array which contains the info of each key in the tree sorted respectively,
    * or an empty array if the tree is empty.
+   * @pre: none
+   * @post: none 
    */
   public String[] infoToArray()
   {
@@ -220,7 +240,6 @@ public class WAVLTree {
         {
 	        arr[counter]=WAVL_tempNode.info;
 	        counter++;
-	        
 	        WAVL_tempNode = WAVL_tempNode.getSuccessor();
   		}
         return arr;                    
@@ -228,29 +247,39 @@ public class WAVLTree {
 
 /**
    * public int insert(int k, String i)
-   *
+   * 
+   * time complexity: O(log(h))
    * inserts an item with key k and info i to the WAVL tree.
    * the tree must remain valid (keep its invariants).
    * returns the number of rebalancing operations, or 0 if no rebalancing operations were necessary.
    * returns -1 if an item with key k already exists in the tree.
+   * @pre: item to insert, consisted of key k and info i.
+   * @post: the WAVL Tree now has the new node, if the key didn't exist already in the tree. 
    */
-   public int insert(int k, String i) {
-	   if(empty()){											//if empty: Start a new tree.
-		   startNewRoot(k, i);return 0;}					
-	   WAVLNode parent = searchInsertionPlace(k); 			//finds desired insertion place.
-	   if (parent.key == k){								//if already exist: return -1.
-		   return -1;}										
-	   return addNewLeaf(parent, k, i);						//add new leaf.
+   public int insert(int k, String i) 
+   {
+	   if(empty())  //if empty: Start a new tree.
+	   {	
+		   startNewRoot(k, i);
+		   return 0;
+	   }					
+	   WAVLNode parent = searchInsertionPlace(k); 	//finds the desired insertion place.
+	   if (parent.key == k)
+	   {	
+		   return -1; //if already exist: return -1.
+	   }										
+	   return addNewLeaf(parent, k, i);	//add the new leaf.
    }
 
 /**
-    * private void private WAVLNode addNewLeaf(WAVLNode parent, int k, String i)
+    * private int addNewLeaf(WAVLNode parent, int k, String i)
     *
+    * time complexity: O(log(h))
     * create a new leaf node with key k and info i under parent.
-    * 
-    * return # of rebalances.
+    * returns # of rebalances.
+    * @pre: receives place to insert, key and info of the new leaf.
+    * @post: the tree now has the new leaf.
     */
-   
    private int addNewLeaf(WAVLNode parent, int k, String i){ 
 	   size++;
 	   boolean parentIsLeaf = parent.isLeaf();
@@ -262,55 +291,53 @@ public class WAVLTree {
 	   }
 	   if(parentIsLeaf){
 		  return promote(parent);
-	  }else{
-		  return 0;}
-  }
+	   }else{
+		  return 0;
+	   }
+   }
 
 /**
     * private int promote(WAVLNode WAVL_Node)
     *
-    * promote the node.
-    * 
+    * worst case time complexity: O(log(h)).
+    * promote the node and fixes the tree if needed.
     * return number of rebalances.
-    * 
-    * precondition: none
-    * postcondition: none
+    * @pre: none
+    * @post: none
     */
    private int promote(WAVLNode node)
    {
 	   int rebalanceCounter = 0;
 	   WAVLNode partnerNode, innerNode;
-	   while(node != WAVL_root){ 										// "because in the end it doesn't even matter"
+	   while(node != WAVL_root){ 		// "because in the end it doesn't even matter"
 		   if(node.rankDiff == 2){										
 			   node.rankDiff = 1;
-			   return rebalanceCounter + 1;}							//fixed problem!
+			   return rebalanceCounter + 1;   //fixed problem!
+		   }	
 		   
 		   partnerNode=node.getPartner();
-		   
-		   if((partnerNode.rankDiff == 1) 
-				   && ( ! partnerNode.isExternalLeaf())){				
+		   if((partnerNode.rankDiff == 1) && (!partnerNode.isExternalLeaf())){				
 			   partnerNode.rankDiff = 2;
-			   node = node.parentNode; 									// need to promote parent node.	
+			   node = node.parentNode; 		// need to promote parent node.	
 			   rebalanceCounter++;
-		   }else{														// need to be rotated
+		   }else{							// needs to be rotated.
 			   if(node.isLeftNode()){					
-				   innerNode=node.rightNode;							//get inner node.
+				   innerNode=node.rightNode;	//get inner node.
 			   }else{			
 				   innerNode=node.leftNode;
 			   }
-			   if((innerNode.rankDiff == 2) 
-					   || (innerNode.isExternalLeaf())){		// need single rotation
+			   if((innerNode.rankDiff == 2) || (innerNode.isExternalLeaf())){		// needs single rotation.
 				   rebalanceCounter++;										
-				   if(node.isLeftNode()){							//node became the parent.
+				   if(node.isLeftNode()){		//node became the parent.
 					   rotateRight(node.parentNode);  				
 					   fixRanksAfterRotate(node,node.rightNode);
 				   }else{
 					   rotateLeft(node.parentNode);  				
 					   fixRanksAfterRotate(node,node.leftNode);
 				   }			
-				   return rebalanceCounter;							//problem solved!
+				   return rebalanceCounter;		//problem solved!
 				   
-			   }else{											// need double rotation
+			   }else{		// needs double rotation.
 				   rebalanceCounter+= 2;										
 				   if(node.isLeftNode()){
 					   node = doubleRotateLeftRight(node.parentNode);
@@ -319,7 +346,7 @@ public class WAVLTree {
 					   node = doubleRotateRightLeft(node.parentNode);
 					   fixRanksAfterDoubleRotate(node,node.leftNode);
 				   }			
-				   return rebalanceCounter;							//problem solved!
+				   return rebalanceCounter;		//problem solved!
 			   }
 		   }
 	   }
