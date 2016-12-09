@@ -390,261 +390,6 @@ public class WAVLTree {
 		   swap(deleteNode,deleteNode.rightNode);
 		   return deleteNodeLeaf(deleteNode.rightNode);		   
 	   }
-	   /*
-		int rebalancingCounter = 0; //TODO do we need to send old rebalancing?;
-		WAVLNode deleteNodeParent = deleteNode.parentNode;
-		WAVLNode partnerNode = deleteNode.getPartner();
-		int partnerNode_rankDiff = partnerNode.rankDiff;
-		if(partnerNode.isExternalLeaf()){
-			partnerNode_rankDiff = 2;
-		}
-		
-		
-		// case 7: deleteNode isn't a leaf and has one leaf child and one external leaf child.
-		//deleteNode has rank difference of one.
-	   if(deleteNode.rankDiff)
-	   if(!deleteNode.isLeaf() && deleteNode.rankDiff == 1){
-		   if((deleteNode.leftNode.isLeaf() && deleteNode.rightNode == WAVL_emptyNode)){
-			   if(deleteNode.key < deleteNodeParent.key){ //is left child
-				   deleteNodeParent.leftNode = deleteNode.leftNode;
-				   size --;
-				   return rebalancingCounter;
-			   }else{ //is right child
-				   deleteNodeParent.rightNode = deleteNode.leftNode;
-				   size --;
-				   return rebalancingCounter;
-			   }
-		   }else if ((deleteNode.rightNode.isLeaf() && deleteNode.leftNode == WAVL_emptyNode)){
-			   if(deleteNode.key < deleteNodeParent.key){ //is left child
-				   deleteNodeParent.leftNode = deleteNode.rightNode;
-				   size --;
-				   return rebalancingCounter;
-			   }else{ //is right child
-				   deleteNodeParent.rightNode = deleteNode.rightNode;
-				   size --;
-				   return rebalancingCounter;
-			   }
-		   }
-	   }
-	   
-	   // case 8: deleteNode isn't a leaf and has one leaf child and one external leaf child. deleteNode has rank difference of two.
-	   
-	   if(!deleteNode.isLeaf() && deleteNode.rankDiff == 2){
-		   if((deleteNode.leftNode.isLeaf() && deleteNode.rightNode == WAVL_emptyNode)){
-			   if(deleteNode.key < deleteNodeParent.key){ //is left child
-				   if(deleteNodeParent.rightNode.rankDiff == 2){
-					   deleteNodeParent.leftNode = deleteNode.leftNode;
-					   size --;
-					   return demote(deleteNodeParent, rebalancingCounter);
-				   }
-			   }else{ //is right child
-				   if(deleteNodeParent.leftNode.rankDiff == 2){
-					   deleteNodeParent.rightNode = deleteNode.leftNode;
-					   size --;
-					   return demote(deleteNodeParent, rebalancingCounter);
-				   }
-			   }
-		   }else if ((deleteNode.rightNode.isLeaf() && deleteNode.leftNode == WAVL_emptyNode)){
-			   if(deleteNode.key < deleteNodeParent.key){ //is left child
-				   if(deleteNodeParent.rightNode.rankDiff == 2){
-					   deleteNodeParent.leftNode = deleteNode.rightNode;
-					   size --;
-					   return demote(deleteNodeParent, rebalancingCounter);
-				   }
-			   }else{ //is right child
-				   if(deleteNodeParent.leftNode.rankDiff == 2){
-					   deleteNodeParent.rightNode = deleteNode.rightNode;
-					   size --;
-					   return demote(deleteNodeParent, rebalancingCounter);
-				   }
-			   }
-		   }
-	   }
-	   
-	   // case 9: one is a leaf and the other child's children both has rank differences of two.
-	   if(!deleteNode.isLeaf() && deleteNode.rankDiff == 2){
-		   if((deleteNode.leftNode.isLeaf() && deleteNode.rightNode == WAVL_emptyNode)){
-			   if(deleteNode.key < deleteNodeParent.key){ //is left child
-				   if(deleteNodeParent.rightNode.rankDiff == 1){
-					   if(deleteNodeParent.rightNode.leftNode.rankDiff == 2 && deleteNodeParent.rightNode.rightNode.rankDiff ==2){
-						   deleteNodeParent.leftNode = deleteNode.leftNode;
-						   size --;
-						   // demoting right node's rank
-						   deleteNodeParent.rightNode.leftNode.rankDiff = 1;
-						   deleteNodeParent.rightNode.rightNode.rankDiff = 1;
-						   rebalancingCounter ++;
-						   return demote(deleteNodeParent, rebalancingCounter);
-					   }
-				   }
-			   }else{ //is right child
-				   if(deleteNodeParent.leftNode.rankDiff == 1){
-					   if(deleteNodeParent.rightNode.leftNode.rankDiff == 2 && deleteNodeParent.rightNode.rightNode.rankDiff ==2){
-						   deleteNodeParent.rightNode = deleteNode.leftNode;
-						   size --;
-						   // demoting right node's rank
-						   deleteNodeParent.leftNode.leftNode.rankDiff = 1;
-						   deleteNodeParent.leftNode.rightNode.rankDiff = 1;
-						   rebalancingCounter ++;
-						   return demote(deleteNodeParent, rebalancingCounter);
-					   }
-				   }
-			   }
-		   }else if ((deleteNode.rightNode.isLeaf() && deleteNode.leftNode == WAVL_emptyNode)){
-			   if(deleteNode.key < deleteNodeParent.key){ //is left child
-				   if(deleteNodeParent.rightNode.rankDiff == 1){
-					   if(deleteNodeParent.rightNode.leftNode.rankDiff == 2 && deleteNodeParent.rightNode.rightNode.rankDiff ==2){
-						   deleteNodeParent.leftNode = deleteNode.rightNode;
-						   size --;
-						   // demoting right node's rank
-						   deleteNodeParent.rightNode.leftNode.rankDiff = 1;
-						   deleteNodeParent.rightNode.rightNode.rankDiff = 1;
-						   rebalancingCounter ++;
-						   return demote(deleteNodeParent, rebalancingCounter);
-					   }
-				   }
-			   }else{ //is right child
-				   if(deleteNodeParent.leftNode.rankDiff == 1){
-					   if(deleteNodeParent.rightNode.leftNode.rankDiff == 2 && deleteNodeParent.rightNode.rightNode.rankDiff ==2){
-						   deleteNodeParent.rightNode = deleteNode.rightNode;
-						   size --;
-						   // demoting right node's rank
-						   deleteNodeParent.leftNode.leftNode.rankDiff = 1;
-						   deleteNodeParent.leftNode.rightNode.rankDiff = 1;
-						   rebalancingCounter ++;
-						   return demote(deleteNodeParent, rebalancingCounter);
-					   }
-				   }
-			   }
-		   }
-	   }
-
-	   // case 10: one is a leaf and the other child's external child has rank difference of one and the internal child has rank difference of one or two.
-	   if(!deleteNode.isLeaf() && deleteNode.rankDiff == 2){
-		   if((deleteNode.leftNode.isLeaf() && deleteNode.rightNode == WAVL_emptyNode)){
-			   if(deleteNode.key < deleteNodeParent.key){ //is left child
-				   if(deleteNodeParent.rightNode.rankDiff == 1){
-					   if(deleteNodeParent.rightNode.rightNode != WAVL_emptyNode && deleteNodeParent.rightNode.rightNode.rankDiff ==1){
-						   deleteNodeParent.leftNode = deleteNode.leftNode;
-						   size --;
-						   // demoting right node's rank
-						   WAVLNode topNode = rotateLeft(deleteNodeParent);
-						   topNode.rankDiff = topNode.leftNode.rankDiff;
-						   topNode.leftNode.rankDiff = 1;
-						   topNode.rightNode.rankDiff = 2;
-						   topNode.leftNode.leftNode.rankDiff = 1;
-						   return rebalancingCounter + 1; 
-					   }
-				   }
-			   }else{ //is right child
-				   if(deleteNodeParent.leftNode.rankDiff == 1){
-					   if(deleteNodeParent.rightNode.leftNode.rankDiff == 2 && deleteNodeParent.rightNode.rightNode.rankDiff ==2){
-						   deleteNodeParent.rightNode = deleteNode.leftNode;
-						   size --;
-						   // demoting right node's rank
-						   WAVLNode topNode = rotateRight(deleteNodeParent);
-						   topNode.rankDiff = topNode.rightNode.rankDiff;
-						   topNode.rightNode.rankDiff = 1;
-						   topNode.leftNode.rankDiff = 2;
-						   topNode.rightNode.rightNode.rankDiff = 1;
-						   return rebalancingCounter + 1; 
-					   }
-				   }
-			   }
-		   }else if ((deleteNode.rightNode.isLeaf() && deleteNode.leftNode == WAVL_emptyNode)){
-			   if(deleteNode.key < deleteNodeParent.key){ //is left child
-				   if(deleteNodeParent.rightNode.rankDiff == 1){
-					   if(deleteNodeParent.rightNode.leftNode.rankDiff == 2 && deleteNodeParent.rightNode.rightNode.rankDiff ==2){
-						   deleteNodeParent.leftNode = deleteNode.rightNode;
-						   size --;
-						   // demoting right node's rank
-						   WAVLNode topNode = rotateLeft(deleteNodeParent);
-						   topNode.rankDiff = topNode.leftNode.rankDiff;
-						   topNode.leftNode.rankDiff = 1;
-						   topNode.rightNode.rankDiff = 2;
-						   topNode.leftNode.leftNode.rankDiff = 1;
-						   return rebalancingCounter + 1; 
-					   }
-				   }
-			   }else{ //is right child
-				   if(deleteNodeParent.leftNode.rankDiff == 1){
-					   if(deleteNodeParent.rightNode.leftNode.rankDiff == 2 && deleteNodeParent.rightNode.rightNode.rankDiff ==2){
-						   deleteNodeParent.rightNode = deleteNode.rightNode;
-						   size --;
-						   // demoting right node's rank
-						   WAVLNode topNode = rotateRight(deleteNodeParent);
-						   topNode.rankDiff = topNode.rightNode.rankDiff;
-						   topNode.rightNode.rankDiff = 1;
-						   topNode.leftNode.rankDiff = 2;
-						   topNode.rightNode.rightNode.rankDiff = 1;
-						   return rebalancingCounter + 1; 
-					   }
-				   }
-			   }
-		   }
-	   }
-	  
-	   
-	   // case 11: one is a leaf and the other child's external child has rank difference of two or an external leaf and the internal child has rank difference of one.
-	   
-	   if(!deleteNode.isLeaf() && deleteNode.rankDiff == 2){
-		   if((deleteNode.leftNode.isLeaf() && deleteNode.rightNode == WAVL_emptyNode)){
-			   if(deleteNode.key < deleteNodeParent.key){ //is left child
-				   if(deleteNodeParent.rightNode.rankDiff == 1){
-					   if(deleteNodeParent.rightNode.rightNode.rankDiff == 2 && deleteNodeParent.rightNode.leftNode.rankDiff == 1){
-						   deleteNodeParent.leftNode = deleteNode.leftNode;
-						   size --;
-						   // demoting right node's rank
-						   WAVLNode topNode = doubleRotateRightLeft(deleteNodeParent);
-						   topNode.rankDiff = topNode.leftNode.rankDiff;
-						   topNode.leftNode.rankDiff = 2;
-						   topNode.rightNode.rankDiff = 2;
-						   return rebalancingCounter + 2;  
-					   }
-				   }
-			   }else{ //is right child
-				   if(deleteNodeParent.leftNode.rankDiff == 1){
-					   if(deleteNodeParent.leftNode.rightNode.rankDiff == 2 && deleteNodeParent.leftNode.leftNode.rankDiff == 1){
-						   deleteNodeParent.rightNode = deleteNode.leftNode;
-						   size --;
-						   // demoting right node's rank
-						   WAVLNode topNode = doubleRotateLeftRight(deleteNodeParent);
-						   topNode.rankDiff = topNode.rightNode.rankDiff;
-						   topNode.leftNode.rankDiff = 2;
-						   topNode.rightNode.rankDiff = 2;
-						   return rebalancingCounter + 2;  
-					   }
-				   }
-			   }
-		   }else if ((deleteNode.rightNode.isLeaf() && deleteNode.leftNode == WAVL_emptyNode)){
-			   if(deleteNode.key < deleteNodeParent.key){ //is left child
-				   if(deleteNodeParent.rightNode.rankDiff == 1){
-					   if(deleteNodeParent.rightNode.rightNode.rankDiff == 2 && deleteNodeParent.rightNode.leftNode.rankDiff == 1){
-						   deleteNodeParent.leftNode = deleteNode.rightNode;
-						   size --;
-						   // demoting right node's rank
-						   WAVLNode topNode = doubleRotateRightLeft(deleteNodeParent);
-						   topNode.rankDiff = topNode.leftNode.rankDiff;
-						   topNode.leftNode.rankDiff = 2;
-						   topNode.rightNode.rankDiff = 2;
-						   return rebalancingCounter + 2; 
-					   }
-				   }
-			   }else{ //is right child
-				   if(deleteNodeParent.leftNode.rankDiff == 1){
-					   if(deleteNodeParent.leftNode.rightNode.rankDiff == 2 && deleteNodeParent.leftNode.leftNode.rankDiff == 1){
-						   deleteNodeParent.rightNode = deleteNode.rightNode;
-						   size --;
-						   // demoting right node's rank
-						   WAVLNode topNode = doubleRotateLeftRight(deleteNodeParent);
-						   topNode.rankDiff = topNode.rightNode.rankDiff;
-						   topNode.leftNode.rankDiff = 2;
-						   topNode.rightNode.rankDiff = 2;
-						   return rebalancingCounter + 2;   
-					   }
-				   }
-			   }
-		   }
-	   }*/
    }
 
    
@@ -659,7 +404,7 @@ public class WAVLTree {
     * @post: return number of rebalancing operations.
     */
    private int deleteNodeLeaf(WAVLNode deleteNode){
-	int rebalancingCounter = 0; //TODO do we need to send old rebalancing?;
+	int rebalancingCounter = 0; 
 	WAVLNode deleteNodeParent = deleteNode.parentNode;
 	WAVLNode partnerNode = deleteNode.getPartner();
 	int partnerNode_rankDiff = partnerNode.rankDiff;
@@ -838,24 +583,21 @@ public class WAVLTree {
     */
    private int demote(WAVLNode deleteNode , int rebalancingCounter)
    {
-	    //int rebalancingCounter = 0; //TODO do we need to send old rebalancing?;
 	    WAVLNode partnerNode;
  	    WAVLNode deleteNodeParent;
  	    WAVLNode partnerNode_externalChild,partnerNode_internalChild;
 	    WAVLNode topNode;
 	   	while(deleteNode!=WAVL_root){ // "In the end, it doesn't even matter"
-			// case 1: node.rankdiff = 1
+			// case 1: node rank difference is 1
 	   		deleteNodeParent = deleteNode.parentNode;
 	   		partnerNode = deleteNode.getPartner();
 			if(deleteNode.rankDiff==1){
-//				System.out.println("case 1:" + deleteNode.key);
 				deleteNode.rankDiff=2;
 				return rebalancingCounter+1;
 			}
 			
-			// case 2: both node and partner node has rank diffrence 2
+			// case 2: both node and partner node has rank difference 2
 			if(deleteNode.rankDiff == 2 && partnerNode.rankDiff == 2){
-//				System.out.println("case 2:" + deleteNode.key);
 				partnerNode.rankDiff = 1;
 				rebalancingCounter ++;
 				deleteNode = deleteNode.parentNode;
@@ -870,9 +612,8 @@ public class WAVLTree {
 				partnerNode_internalChild = partnerNode.rightNode;
 			}
 			
-			//case 3: node is with rank diffrence 2, and partner with 1, with both of his children has a rank diffrence 2.
+			//case 3: node is with rank difference 2, and partner with 1, with both of his children has a rank diffrence 2.
 			if(partnerNode_internalChild.rankDiff == 2 && partnerNode_externalChild.rankDiff == 2){
-//				System.out.println("case 3:" + deleteNode.key);
 				partnerNode_externalChild.rankDiff = 1;
 				partnerNode_internalChild.rankDiff = 1;
 				rebalancingCounter +=2;
@@ -880,10 +621,9 @@ public class WAVLTree {
 				continue;
 			}
 			
-		   // case 4: node is with rank diffrence 2, and partner with 1, external child has rank difference of one and 
+		   // case 4: node is with rank difference 2, and partner with 1, external child has rank difference of one and 
 		   // the internal child has rank difference of one or two.
 		   if(partnerNode_externalChild.rankDiff == 1 && (!partnerNode_externalChild.isExternalLeaf())){
-//				System.out.println("case 4:" + deleteNode.key);
 			   if(deleteNode.isLeftNode()){
 				   topNode = rotateLeft(deleteNodeParent);
 				   topNode.rankDiff = topNode.leftNode.rankDiff;
@@ -905,11 +645,10 @@ public class WAVLTree {
 			   return rebalancingCounter + 1;    
 		   }
 		   
-		   // case 5: node is with rank diffrence 2 and partner with 1,  external child has rank difference
+		   // case 5: node is with rank difference 2 and partner with 1,  external child has rank difference
 		   // of 2 or an external leaf and the internal child has rank difference of 1.	   
 		   if((partnerNode_externalChild.rankDiff == 2 || partnerNode_externalChild.isExternalLeaf())
 				   && partnerNode_internalChild.rankDiff == 1){
-//				System.out.println("case 5:" + deleteNode.key);
 			   if(deleteNode.isLeftNode()){
 				   topNode = doubleRotateRightLeft(deleteNodeParent);
 				   topNode.rankDiff = topNode.leftNode.rankDiff;
@@ -1019,10 +758,6 @@ public class WAVLTree {
   /**
    * public class WAVLNode
    *
-   * If you wish to implement classes other than WAVLTree 
-   * (for example WAVLNode), do it in this file, not in 
-   * another file.
-   * This is an example which can be deleted if no such classes are necessary.
    */
   public class WAVLNode{
 	  WAVLNode parentNode;
