@@ -1,12 +1,12 @@
 import java.util.Arrays;
 import java.util.Random;
 
+
 public class WAVLTree_Tester {
 	
 	public static void main(String[] args) {
 		//create a random tree and test if there are any error while inserting the items.
 		WAVLTree test_tree =example_random_tree_creator(1000,1000000000);
-		
 		
 		// creating a tree and testing it for min, max, search.
 		test_tree = example_tree_creator();
@@ -44,6 +44,8 @@ public class WAVLTree_Tester {
 			System.out.println("error 10: in size function");
 		}
 		System.out.println("Done!");
+		test_tree = example_random_tree_creator(25,100);
+		printBinaryTree(test_tree.WAVL_root, 0,test_tree.WAVL_emptyNode);
 	}
 	
 	public static WAVLTree example_tree_creator(){
@@ -73,4 +75,17 @@ public class WAVLTree_Tester {
 		return tree;
 	}
 	
+	public static void printBinaryTree(WAVLTree.WAVLNode root, int level, WAVLTree.WAVLNode empty){
+	    if(root==null || root == empty)
+	         return;
+	    printBinaryTree(root.rightNode, level+1,empty);
+	    if(level!=0){
+	        for(int i=0;i<level-1;i++)
+	            System.out.print("|\t");
+	            System.out.println("|---" + root.rankDiff + "---"+root.key);
+	    }
+	    else
+	        System.out.println(root.key);
+	    printBinaryTree(root.leftNode, level+1,empty);
+	} 	
 }
