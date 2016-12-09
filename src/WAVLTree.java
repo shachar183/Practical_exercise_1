@@ -9,7 +9,8 @@
 
 public class WAVLTree {
 	final WAVLNode WAVL_emptyNode = new WAVLNode();
-	private WAVLNode WAVL_root = WAVL_emptyNode;
+	// TODO change to private
+	public WAVLNode WAVL_root = WAVL_emptyNode;
 	private int size = 0;
 
 	  
@@ -254,7 +255,7 @@ public class WAVLTree {
     *
     * promote the node.
     * 
-    * return number of rebalance.
+    * return number of rebalances.
     * 
     * precondition: none
     * postcondition: none
@@ -965,16 +966,13 @@ public class WAVLTree {
 	  
 	  /** public boolean isLeftNode()
 	  * 
-	  * return partner node if exist.
+	  * returns whether the node is a left node. 
 	  * 
 	  * precondition: is not the root.
 	  */
 	  public boolean isLeftNode()
 	  {
-			  if(this==this.parentNode.leftNode){ 			//Node is a left node.
-				  return true;
-			  }else{										//Node is a right node.
-				  return false;}
+		return this==this.parentNode.leftNode;   
 	  }
 	  
 	  /** public WAVLNode getPartner()
@@ -987,7 +985,8 @@ public class WAVLTree {
 			  if(this.isLeftNode()){ 						//Node is a left node.
 				  return this.parentNode.rightNode;
 			  }else{										//Node is a right node.
-				  return this.parentNode.leftNode;}
+				  return this.parentNode.leftNode;
+			  }
 		  }
 		  return null;
 	  }
@@ -1005,10 +1004,10 @@ public class WAVLTree {
 	      	while(!WAVL_Node.leftNode.isExternalLeaf()){
 	      		WAVL_Node=WAVL_Node.leftNode;}
 	      }else{
-	    	  while(WAVL_Node.parentNode!=null 
-	    			  && WAVL_Node == WAVL_Node.parentNode.rightNode){
-	    		  WAVL_Node=WAVL_Node.parentNode;}
-			  if(WAVL_Node.parentNode!=null){
+	    	  while(WAVL_Node.parentNode!=null && WAVL_Node == WAVL_Node.parentNode.rightNode){
+	    		  WAVL_Node=WAVL_Node.parentNode;
+	    		  }
+			  if(WAVL_Node.parentNode!=null){ 
 				  WAVL_Node=WAVL_Node.parentNode;
 			  }else{
 				  return null;}
@@ -1026,7 +1025,8 @@ public class WAVLTree {
 		  if(!WAVL_Node.leftNode.isExternalLeaf()){
 			  WAVL_Node=WAVL_Node.leftNode;
 	      	  while(!WAVL_Node.rightNode.isExternalLeaf()){
-	      		WAVL_Node=WAVL_Node.rightNode;}
+	      		WAVL_Node=WAVL_Node.rightNode;
+	      		}
 	      }else{
 	    	  while(WAVL_Node.parentNode!=null 
 	    			  && WAVL_Node == WAVL_Node.parentNode.leftNode){
@@ -1050,18 +1050,18 @@ public class WAVLTree {
 		{
 			 WAVLNode WAVL_tempNode = getSmallestNode();
 			 int counter = 0;
-			 boolean passedThrouthALeaf = false;
+			 boolean passedThroughALeaf = false;
 			 int rank = 0;
 			 do{
 				 if (WAVL_tempNode.isLeaf())
 				 {
-					 if(passedThrouthALeaf)
+					 if(passedThroughALeaf)
 					 {
 						 if(rank!=0){
 							 return false;
 						 }
 					 }else{
-						 passedThrouthALeaf=true;
+						 passedThroughALeaf=true;
 						 rank = 0;
 					 }
 				 }
