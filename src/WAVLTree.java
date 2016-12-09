@@ -9,19 +9,16 @@
 	7. delete test function in the end of the file.
 	8. add comments in the code.
 	9. after testing - change variables and functions to private/static when needed.
-	
-*/
+	*/
 
 
 
 
 /**
- *
  * WAVLTree
  *
  * An implementation of a WAVL Tree with
  * distinct integer keys and info
- *
  */
 public class WAVLTree {
 	final WAVLNode WAVL_emptyNode = new WAVLNode();
@@ -36,6 +33,7 @@ public class WAVLTree {
     * returns the number of nodes in the tree.
     *
     * time complexity: O(1)
+    * 
     * @pre: none
     * @post: none
     */
@@ -48,7 +46,11 @@ public class WAVLTree {
    * public boolean empty()
    *
    * returns true if and only if the tree is empty
-   *
+   * 
+   * time complexity: O(1)
+   * 
+   * @pre: none
+   * @post: none
    */
    public boolean empty() {
 	   return (WAVL_root==WAVL_emptyNode); 
@@ -57,9 +59,11 @@ public class WAVLTree {
    /**
    * public String min()
    *
-   * time complexity: O(log(h))
    * returns the info of the item with the smallest key in the tree,
    * or null if the tree is empty
+   * 
+   * time complexity: O(log(n))
+   * 
    * @pre: none
    * @post: none
    */
@@ -75,18 +79,19 @@ public class WAVLTree {
 /**
     * public String max()
     *
-    * time complexity: O(log(h))
     * returns the info of the item with the largest key in the tree,
     * or null if the tree is empty.
+    * 
+    * time complexity: O(log(n))
+    * 
     * @pre: none
     * @post: none 
     */
   public String max()
   {
+	   if (empty()){return null;} // no values, so nothing to return
+	   
 	   WAVLNode WAVL_tempNode = WAVL_root;
-	   if (empty()){
-		   return null;
-	   }
 	   while(WAVL_tempNode.rightNode != WAVL_emptyNode){
 		   WAVL_tempNode = WAVL_tempNode.rightNode;
 	   }
@@ -94,17 +99,19 @@ public class WAVLTree {
   }
 
 /**
-   * public String search(int k)
+   * public String search(int nodeKey)
    * 
-   * time complexity: O(log(h))
-   * returns the info of an item with key k if it exists in the tree
+   * returns the info of an item with key nodeKey if it exists in the tree
    * otherwise, returns null
+   * 
+   * time complexity: O(log(n))
+   * 
    * @pre: none
    * @post: none 
    */
-  public String search(int k)
+  public String search(int nodeKeyk)
   {
-	  WAVLNode WAVL_tempNode = searchNode(k);
+	  WAVLNode WAVL_tempNode = searchNode(nodeKeyk);
 	  if(WAVL_tempNode!=null){
 		  return WAVL_tempNode.info;
 	  }else{
@@ -113,23 +120,22 @@ public class WAVLTree {
   }
   
   /**
-   * private  WAVLNode searchNode(int k)
+   * private  WAVLNode searchNode(int nodeKey)
    *
-   * time complexity: O(log(h))
-   * returns the node of an key k if it exists in the tree
+   * returns the node with a key = nodeKey if it exists in the tree
    * otherwise, returns null
+   * 
+   * time complexity: O(log(n))
+   * 
    * @pre: none
    * @post: none 
    */
-  private  WAVLNode searchNode(int k)
+  private  WAVLNode searchNode(int nodeKey)
   {
-	  if(empty()){
-		  return null;
-	  }
+	  if(empty()){return null;} //no nodes, then nothing to return.
 	  
-	  WAVLNode WAVL_tempNode = searchInsertionPlace(k);
-	  if (WAVL_tempNode.key==k)
-	  {
+	  WAVLNode WAVL_tempNode = searchInsertionPlace(nodeKey);
+	  if (WAVL_tempNode.key==nodeKey){ // (=found a node with .key=nodeKey)
 		  return WAVL_tempNode;
 	  }else{
 		  return null;
@@ -137,48 +143,47 @@ public class WAVLTree {
   }
 
 /**
-   * private  WAVLNode searchInsertionPlace(int k)
+   * private  WAVLNode searchInsertionPlace(int nodeKey)
    *
-   * time complexity: O(log(h))
-   * returns the node of an key k or where k should be added.
-   * otherwise, returns null
+   * returns the node of an key nodeKey or where it should be added.
+   * if empty, returns null
+   * 
+   * time complexity: O(log(n))
+   * 
    * @pre: none
    * @post: none 
    */
-  private WAVLNode searchInsertionPlace(int k)
+  private WAVLNode searchInsertionPlace(int nodeKey)
   {
-	  if(empty()){
-		  return null;
-	  }else{
-		  WAVLNode WAVL_tempNode = WAVL_root;
-		  while (WAVL_tempNode.key != k)
+	  if(empty()){return null;} //no nodes, then nothing to return.
+	  
+	  WAVLNode WAVL_tempNode = WAVL_root;
+	  while (WAVL_tempNode.key != nodeKey)
+	  {
+		  if(WAVL_tempNode.key>nodeKey) // we need to search in the left side.
 		  {
-			  if(WAVL_tempNode.key>k) // we need to search in the left side.
+			  if(WAVL_tempNode.leftNode.isExternalLeaf()) // we reached the end of the branch
 			  {
-				  if(WAVL_tempNode.leftNode.isExternalLeaf()) // we reached the end of the branch
-				  {
-					  return WAVL_tempNode;
-				  }else{
-					  WAVL_tempNode=WAVL_tempNode.leftNode;
-				  }
-			  }else{ // we need to search in the right side.
-				  if(WAVL_tempNode.rightNode.isExternalLeaf()) // we reached the end of the branch
-				  {
-					  return WAVL_tempNode;
-				  }else{
-					  WAVL_tempNode=WAVL_tempNode.rightNode;
-				  }
+				  return WAVL_tempNode;
+			  }else{
+				  WAVL_tempNode=WAVL_tempNode.leftNode;
+			  }
+		  }else{ // we need to search in the right side.
+			  if(WAVL_tempNode.rightNode.isExternalLeaf()) // we reached the end of the branch
+			  {
+				  return WAVL_tempNode;
+			  }else{
+				  WAVL_tempNode=WAVL_tempNode.rightNode;
 			  }
 		  }
-		  return WAVL_tempNode;
 	  }
-	  
+	  return WAVL_tempNode;
   }
 
 /**
    * private WAVLNode getSmallestNode()
    * 
-   * time complexity: O(log(h))
+   * time complexity: O(log(n))
    * Returns pointer of the node with the smallest key in the tree
    * or null if the tree is empty.
    * @pre: none
@@ -248,7 +253,7 @@ public class WAVLTree {
 /**
    * public int insert(int k, String i)
    * 
-   * time complexity: O(log(h))
+   * time complexity: O(log(n))
    * inserts an item with key k and info i to the WAVL tree.
    * the tree must remain valid (keep its invariants).
    * returns the number of rebalancing operations, or 0 if no rebalancing operations were necessary.
@@ -274,7 +279,7 @@ public class WAVLTree {
 /**
     * private int addNewLeaf(WAVLNode parent, int k, String i)
     *
-    * time complexity: O(log(h))
+    * time complexity: O(log(n))
     * create a new leaf node with key k and info i under parent.
     * returns # of rebalances.
     * @pre: receives place to insert, key and info of the new leaf.
@@ -299,7 +304,7 @@ public class WAVLTree {
 /**
     * private int promote(WAVLNode WAVL_Node)
     *
-    * worst case time complexity: O(log(h)).
+    * worst case time complexity: O(log(n)).
     * promote the node and fixes the tree if needed.
     * return number of rebalances.
     * @pre: none
@@ -400,7 +405,7 @@ public class WAVLTree {
 /**
    * public int delete(int k)
    *
-   * time complexity - O(log(h))
+   * time complexity - O(log(n))
    * deletes an item with key k from the binary tree, if it is there;
    * the tree must remain valid (keep its invariants).
    * returns the number of rebalancing operations, or 0 if no rebalancing operations were needed.
@@ -427,7 +432,7 @@ public class WAVLTree {
    /**
     * private int deleteUnaryNode(WAVLNode deleteNode)
     *
-    * time complexity - O(log(h))
+    * time complexity - O(log(n))
     * delete the node deleteNode from the WAVL tree.
     * returns the number of rebalancing operations, or 0 if no rebalancing operations were needed.
     * @pre: tree.size!=0
@@ -448,7 +453,7 @@ public class WAVLTree {
    /**
     * private int deleteLeafNode(WAVLNode deleteNode)
     *
-    * time complexity - O(log(h))
+    * time complexity - O(log(n))
     * delete the node deleteNode from the WAVL tree.
     * returns the number of rebalancing operations, or 0 if no rebalancing operations were needed.
     * @pre: tree.size!=0
@@ -564,7 +569,7 @@ public class WAVLTree {
    /**
     * private int deleteNode(WAVLNode deleteNode)
     *
-    * time complexity - O(log(h))
+    * time complexity - O(log(n))
     * delete the node deleteNode from the WAVL tree.
     * the tree must remain valid (keep its invariants).
     * returns the number of rebalancing operations, or 0 if no rebalancing operations were needed.
@@ -610,7 +615,7 @@ public class WAVLTree {
 /**
     * private static void demote(WAVLNode node)
     *
-    * worst case time complexity - O(log(h))
+    * worst case time complexity - O(log(n))
     * demotes the node.
     * returns how many rebalancing actions were taken.
     * @pre: deleteNode is not null
@@ -703,7 +708,7 @@ public class WAVLTree {
     }
 
     /**
-    * private static WAVLNode rotateLeft(WAVLNode node)
+    * private WAVLNode rotateLeft(WAVLNode node)
     *
     * time complexity - O(1)
     * performs a left rotation of the tree.
@@ -733,7 +738,7 @@ public class WAVLTree {
    }
    
    /**
-    * private static WAVLNode rotateRight(WAVLNode node)
+    * private WAVLNode rotateRight(WAVLNode node)
     *
     * time complexity - O(1)
     * performs a right rotation of the tree.
@@ -763,7 +768,7 @@ public class WAVLTree {
    }
    
    /**
-    * private static WAVLNode doubleRotateLeftRight(WAVLNode node)
+    * private WAVLNode doubleRotateLeftRight(WAVLNode node)
     *
     * time complexity - O(1)
     * performs a left rotation and then right rotation of the tree.
@@ -778,7 +783,7 @@ public class WAVLTree {
    }
    
    /**
-    * private static WAVLNode doubleRotateRightLeft(WAVLNode node)
+    * private WAVLNode doubleRotateRightLeft(WAVLNode node)
     *
     * time complexity - O(1)
     * performs a right rotation and then left rotation of the tree.
@@ -915,11 +920,13 @@ public class WAVLTree {
 	  }
 	  
 	  /**
-	   * private WAVLNode getSuccessor(WAVLNode WAVL_Node)
+	   * TODO what happens if we have only one node in the tree? is it ok to return itself? - 
+	   * TODO ^Ido: no. it return null.
+	   * private WAVLNode getSuccessor()
 	   * 
-	   * worst case time complexity - O(log(h)), average time complexity - O(1)
-	   * Returns pointer of the first node with a bigger key then WAVL_Node 
-	   * TODO what happens if we have only one node in the tree? is it ok to return itself?
+	   * Returns pointer of the first node with a bigger key then WAVL_Node.
+	   * 
+	   * worst case time complexity - O(log(n)), average time complexity - O(1)
 	   * @pre - none.
 	   * @post - none.
 	   */
@@ -948,7 +955,7 @@ public class WAVLTree {
 	  /**
 	  * private WAVLNode getPredecessor(WAVLNode WAVL_Node)
 	  * 
-	  * worst case time complexity - O(log(h)), average time complexity - O(1)
+	  * worst case time complexity - O(log(n)), average time complexity - O(1)
 	  * Returns pointer of the first node with a bigger key then WAVL_Node 
 	  * @pre - none.
 	  * @post - none.
