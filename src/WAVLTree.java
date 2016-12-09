@@ -6,7 +6,10 @@
 	4. Document the complexity of each function.
 	5. excel of actions.
 	6. go over the documentation of each function.
-	 
+	7. delete test function in the end of the file.
+	8. add comments in the code.
+	9. after testing - change variables and functions to private/static when needed.
+	
 */
 
 
