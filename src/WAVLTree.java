@@ -341,6 +341,7 @@ public class WAVLTree {
     * create a new root node with key k and info i
     * 
     */
+   
    private void startNewRoot(int k, String i){
 	   WAVL_root = new WAVLNode(null, WAVL_emptyNode, WAVL_emptyNode, 1, k ,i);
 	   size = 1;

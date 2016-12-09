@@ -5,7 +5,7 @@ public class WAVLTree_Tester {
 	
 	public static void main(String[] args) {
 		//create a random tree and test if there are any error while inserting the items.
-		WAVLTree test_tree =example_random_tree_creator(10^4,10^10);
+		WAVLTree test_tree =example_random_tree_creator(1000,1000000000);
 		
 		
 		// creating a tree and testing it for min, max, search.
@@ -69,7 +69,7 @@ public class WAVLTree_Tester {
 				return tree;
 			}
 		}
-		System.out.println("Finish inserting " + tree.size() + " random items to a new WAVL tree without any errors.");
+		System.out.println("Finished inserting " + tree.size() + " random items to a new WAVL tree without any errors.");
 		return tree;
 	}
 	
