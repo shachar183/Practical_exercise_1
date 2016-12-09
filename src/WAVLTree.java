@@ -1,3 +1,17 @@
+
+/* TODO 
+	1. check that the number of rebalancing actions is correct.
+	2. see if we can generalize the rotate and double rotate.
+	3. see if we can check the functions for more edge cases.
+	4. Document the complexity of each function.
+	5. excel of actions.
+	6. go over the documentation of each function.
+	 
+*/
+
+
+
+
 /**
  *
  * WAVLTree
@@ -6,7 +20,6 @@
  * distinct integer keys and info
  *
  */
-
 public class WAVLTree {
 	final WAVLNode WAVL_emptyNode = new WAVLNode();
 	// TODO change to private
