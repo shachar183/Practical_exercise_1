@@ -343,7 +343,7 @@ public class WAVLTree {
 			   }
 		   }
 	   }
-	   return rebalanceCounter; 
+	   return rebalanceCounter + 1; 
    }
 
 	/**
@@ -466,10 +466,10 @@ public class WAVLTree {
 	   size --;
 	   int rebalancingCounter; 
 	   WAVLNode deleteNodeParent;
-	   rebalancingCounter = demote(deleteNode); 	// change leaf rank from 0 to -1 and adjust WAVL tree.
+	   rebalancingCounter = demote(deleteNode) - 1; 	// change leaf rank from 0 to -1 and adjust WAVL tree.
 	   deleteNodeParent = deleteNode.parentNode;
 	   if(deleteNodeParent.isUnary() && deleteNode.rankDiff==2){
-		   rebalancingCounter += demote(deleteNode);// adjust deleteNodeParent rank to be 0 instead of 1.
+		   rebalancingCounter += demote(deleteNode) -1 ;// adjust deleteNodeParent rank to be 0 instead of 1.
 	   }
 	   deleteNodeLeafFromParent(deleteNode);						// delete node
 	   return rebalancingCounter;
@@ -925,10 +925,6 @@ public class WAVLTree {
 			return true;
 		}
 	}
-  
-  
-  
-  
 }
   
 

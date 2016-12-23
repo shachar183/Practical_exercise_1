@@ -5,6 +5,8 @@ import java.util.Random;
 public class WAVLTree_Tester {
 	
 	public static void main(String[] args) {
+		insert_checks();
+		delete_checks();
 		//create a random tree and test if there are any error while inserting the items.
 		WAVLTree test_tree = new WAVLTree();;
 		for(int i= 0; i<1000000; i++){
@@ -115,5 +117,35 @@ public class WAVLTree_Tester {
 	    else
 	        System.out.println(root.key);
 	    printBinaryTree(root.leftNode, level+1,empty);
-	} 	
+	}
+	
+	public static boolean insert_checks(){
+		WAVLTree T = new WAVLTree();
+		int[] tree = {57,26,72,25,38,63,94,3,37,47,78,1,30,32,35};
+		int[] rebalance = {0,1,0,2,0,1,0,3,1,0,2,1,4,2,3};
+		for(int i=0;i<tree.length;i++){
+			if(rebalance[i]!=T.insert(tree[i], "")){System.err.println("error inserting" + tree[i]);return false;}	
+		}
+//		printBinaryTree(T.WAVL_root,0,T.WAVL_emptyNode);
+		return true;
+	}
+
+	public static boolean delete_checks(){
+		WAVLTree T = new WAVLTree();
+		int[] tree = {57,26,72,25,38,63,94,3,37,47,78,1,30,32,35};
+		for(int i=0;i<tree.length;i++){
+			T.insert(tree[i], "");
+			//if(rebalance[i]!=T.insert(tree[i], "")){System.err.println("error inserting" + tree[i]);return false;}	
+		}
+		int[] tree2 = {78,47,25,1,30,35,32,38,57,26,3,37,63,94,72};
+		int[] rebalance = {1,1,0,2,0,0,2,1,2,1,2,1,1,1,0};
+		int lastRebalance = 0;
+		for(int i=0;i<tree.length;i++){
+			if(rebalance[i]!=(lastRebalance=T.delete(tree2[i]))){System.err.println("" + lastRebalance + ":error deleting" + tree2[i]);return false;}	
+		}
+		return true;
+	}
+	
+	
+	
 }
