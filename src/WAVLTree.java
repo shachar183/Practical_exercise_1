@@ -1,13 +1,9 @@
 
 /* TODO 
 	1. check that the number of rebalancing actions is correct.
-	2. see if we can generalize the rotate and double rotate.
 	3. see if we can check the functions for more edge cases.
-	4. Document the complexity of each function.
 	5. excel of actions.
-	6. go over the documentation of each function.
 	7. delete test function in the end of the file.
-	8. add comments in the code.
 	9. after testing - change variables and functions to private/static when needed.
 	*/
 
@@ -292,7 +288,7 @@ public class WAVLTree {
 /**
     * private int promote(WAVLNode node)
     * promote the node and fixes the tree if needed.
-    * @complexity worst case: O(log(n)).
+    * @complexity O(log(n)).
     * @return number of rebalances.
     * @param node the node you want to promote.
     * @pre node!=null
@@ -513,7 +509,7 @@ public class WAVLTree {
    /**
     * private static void demote(WAVLNode node)
     * demotes the node.
-    * @complexity worst case time O(log(n))
+    * @complexity O(log(n))
     * @return how many rebalancing actions were taken.
     * @pre deleteNode is not null
     * @post the rank differences in the tree are correct now.
@@ -800,7 +796,7 @@ public class WAVLTree {
 	   * TODO ^Ido: no. it should return null.
 	   * private WAVLNode getSuccessor()
 	   * Returns pointer of the first node with a bigger key then WAVL_Node.
-	   * @complexity worst case O(log(n)), amortize time - O(1)
+	   * @complexity O(log(n)), amortize time - O(1)
 	   * @pre - none.
 	   * @post - none.
 	   */
