@@ -13,11 +13,41 @@ import jxl.write.Number;
 import jxl.write.biff.RowsExceededException;
 
 public class WAVLTree_Tester {
-	
+	public static void assertEquals(int i, int k){
+		if(i!=k){System.out.println("" + i + "!=" + k);}
+	}
 	public static void main(String[] args) throws WriteException, IOException {
 		//create a random tree and test if there are any error while inserting the items.
-		WAVLTree test_tree = new WAVLTree();
+//		WAVLTree test_tree = new WAVLTree();
 		writeExcel();
+//		WAVLTree tree = new WAVLTree();
+//
+//		assertEquals(0,tree.insert(10, "10"));
+//		assertEquals(1, tree.insert(7,"7"));
+//		assertEquals(2, tree.insert(1, "1"));
+//
+//		
+//		//case right:left
+//		assertEquals(2, tree.insert(4, "4"));
+//		assertEquals(3, tree.insert(3, "3"));
+//		
+//		//case right:right
+//		assertEquals(1, tree.insert(11, "11"));
+//		assertEquals(2, tree.insert(12, "12"));
+//		
+//		//case left:right
+//		assertEquals(3, tree.insert(14, "14"));
+//		assertEquals(3, tree.insert(13, "13"));
+//		//another order creating a 2-2 node in insert:
+//		tree = new WAVLTree();
+//		assertEquals(0,tree.insert(10, "10"));
+//		assertEquals(1, tree.insert(5, "5"));
+//		assertEquals(0,tree.insert(15, "15"));
+//		assertEquals(2,tree.insert(0, "0"));
+//		assertEquals(1, tree.insert(20, "20"));
+//		assertEquals(2, tree.insert(-5, "-5"));
+//		assertEquals(-1, tree.insert(-5, "-5"));
+
 //		for(int i= 0; i<1000000; i++){
 //			example_random_tree_insertor(test_tree,10,500);
 //			example_random_tree_deletor(test_tree, 100, 500);
@@ -82,10 +112,10 @@ public class WAVLTree_Tester {
 		int lastTreeSize =tree.size();
 		for(int i = 0; i < randomInsertionNumber; i++){
 			tree.insert(lastKey = random.nextInt(randomMaxInteger), "info");
-			if(!tree.testTreeRanks()){
-				System.out.println("Error in rebalancing after inserting item key " + lastKey);
-				return tree;
-			}
+//			if(!tree.testTreeRanks()){
+//				System.out.println("Error in rebalancing after inserting item key " + lastKey);
+//				return tree;
+//			}
 		}
 //		System.out.println("Finished inserting 	" + (tree.size()-lastTreeSize) + "	 random items to tree without any errors.");
 		return tree;
@@ -105,10 +135,10 @@ public class WAVLTree_Tester {
 //				System.out.println("__________________________________________________________________");
 //				System.out.println("");
 //				printBinaryTree(tree.WAVL_root, 0,tree.WAVL_emptyNode);
-				if(!tree.testTreeRanks()){
-					System.out.println("Error in rebalancing after deleting item key " + lastKey);
-					return tree;
-				}
+//				if(!tree.testTreeRanks()){
+//					System.out.println("Error in rebalancing after deleting item key " + lastKey);
+//					return tree;
+//				}
 			}
 		}
 //		System.out.println("Finished deleting	" + (lastTreeSize-tree.size()) + "	 random items to tree without any errors.");
@@ -131,7 +161,7 @@ public class WAVLTree_Tester {
 
 	 
 	private static void writeExcel() throws WriteException, IOException {
-		String filePath = "C:\\Users\\Shachar\\workspace\\Practical_exercise_1\\src\\output.xls";
+		String filePath = "src\\output.xls";
 		WritableWorkbook workBook = null;
 		try {
 			//initialize workbook
@@ -162,17 +192,17 @@ public class WAVLTree_Tester {
 			for(int i=1; i<11;i++){
 				WAVLTree test_tree = new WAVLTree();
 				// insertion part
-				Object[] tree_insert_avg_max = random_tree_insertor(test_tree, 10000*i, 10000^100000000);
+				Object[] tree_insert_avg_max = random_tree_insertor(test_tree, 10000*i,  10000000);
 				test_tree = (WAVLTree) tree_insert_avg_max[0];
-				int average_insert_rebalancing_actions = (int) tree_insert_avg_max[1];
+				double average_insert_rebalancing_actions = (double) tree_insert_avg_max[1];
 				int max_insert_rebalancing_actions = (int) tree_insert_avg_max[2];
 				// deletion part
 				Object[] tree_delete_avg_max = random_tree_deletor(test_tree);
 				test_tree = (WAVLTree) tree_delete_avg_max[0];
-				int average_delete_rebalancing_actions = (int) tree_delete_avg_max[1];
+				double average_delete_rebalancing_actions = (double) tree_delete_avg_max[1];
 				int max_delete_rebalancing_actions = (int) tree_delete_avg_max[2];
 				Label id = new Label(0, i, String.format("%s",i));
-				Label number_of_actions = new Label(1, 1,String.format("%s", i*10000));
+				Label number_of_actions = new Label(1, i,String.format("%s", i*10000));
 				Label xl_average_insert_rebalancing_actions = new Label(2, i,String.format("%s",average_insert_rebalancing_actions));
 				Label xl_average_delete_rebalancing_actions = new Label(3, i,String.format("%s",average_delete_rebalancing_actions));
 				Label xl_max_insert_rebalancing_actions = new Label(4, i, String.format("%s",max_insert_rebalancing_actions));
@@ -201,15 +231,16 @@ public class WAVLTree_Tester {
 		Random random = new Random();
 		int lastKey;
 		int lastTreeSize =tree.size();
-		int average_rebalancing_actions = 0;
+		double average_rebalancing_actions = 0;
 		int max_rebalancing_actions = 0;
 		int currect_rebalancing_actions = 0;
-		for(int i = 0; i < randomInsertionNumber; i++){
+		while(tree.size()<randomInsertionNumber){
 			currect_rebalancing_actions = tree.insert(lastKey = random.nextInt(randomMaxInteger), "info");
-			if(!tree.testTreeRanks()){
-				System.out.println("Error in rebalancing after inserting item key " + lastKey);
-//				return tree;
-			}
+//			if(!tree.testTreeRanks()){
+//				System.out.println("Error in rebalancing after inserting item key " + lastKey);
+////				return tree;
+//			}
+			if(currect_rebalancing_actions==-1){continue;}
 			if (currect_rebalancing_actions > max_rebalancing_actions){
 				max_rebalancing_actions = currect_rebalancing_actions;
 			}
@@ -227,17 +258,16 @@ public class WAVLTree_Tester {
 		int lastKey;
 		int lastTreeSize =tree.size();
 //		printBinaryTree(tree.WAVL_root, 0,tree.WAVL_emptyNode);
-		int average_rebalancing_actions = 0;
+		double average_rebalancing_actions = 0;
 		int max_rebalancing_actions = 0;
 		int currect_rebalancing_actions = 0;
 		while(tree.size() > 0){
-			int smallest = tree.getSmallestNode().key;
 //			int smallest_key = Integer.parseInt(smallest);
-			currect_rebalancing_actions = tree.delete(smallest);
-			if(!tree.testTreeRanks()){
-				System.out.println("Error in rebalancing after deleting item key ");
-//				return tree;
-			}
+			currect_rebalancing_actions = tree.delete(tree.getSmallestNode().key);
+//			if(!tree.testTreeRanks()){
+//				System.out.println("Error in rebalancing after deleting item key ");
+////				return tree;
+//			}
 			if (currect_rebalancing_actions > max_rebalancing_actions){
 				max_rebalancing_actions = currect_rebalancing_actions;
 			}
@@ -245,8 +275,8 @@ public class WAVLTree_Tester {
 		}
 		average_rebalancing_actions = average_rebalancing_actions/lastTreeSize;
 		Object [] a = {tree, average_rebalancing_actions, max_rebalancing_actions};
+		System.out.println("Finished deleting	" + (lastTreeSize-tree.size()) + "	 random items to tree without any errors.");
 		return a;
-//		System.out.println("Finished deleting	" + (lastTreeSize-tree.size()) + "	 random items to tree without any errors.");
 	}
 	
 }

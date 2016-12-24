@@ -18,8 +18,7 @@
  */
 public class WAVLTree {
 	final WAVLNode WAVL_emptyNode = new WAVLNode();
-	// TODO change to private
-	public WAVLNode WAVL_root = WAVL_emptyNode;
+	private WAVLNode WAVL_root = WAVL_emptyNode;
 	private int size = 0;
 
 	  
@@ -51,6 +50,7 @@ public class WAVLTree {
    * @return the info of the item with the smallest key in the tree, 
    * or null if the tree is empty
    * @complexity O(log(n))
+   * @dependencies getSmallestNode - O(log(n))
    * @pre none
    * @post none
    */
@@ -88,6 +88,7 @@ public class WAVLTree {
    * otherwise, returns null.
    * @param nodeKey the key of the node you are searching for.
    * @complexity O(log(n))
+   * @dependencies searchNode - O(log(n))
    * @pre none
    * @post none 
    */
@@ -106,6 +107,7 @@ public class WAVLTree {
    * @return a sorted array which contains all keys in the tree,
    * or an empty array if the tree is empty.
    * @complexity O(n)
+   * @dependencies getSmallestNode - O(log(n)), getSuccessor - O(log(n)) (amortize- O(1))
    * @pre none
    * @post none 
    */
@@ -128,6 +130,7 @@ public class WAVLTree {
    * @return an array which contains the info of each key in the tree sorted respectively,
    * or an empty array if the tree is empty.
    * @complexity: O(n)
+   * @dependencies getSmallestNode - O(log(n)), getSuccessor - O(log(n)) (amortize- O(1))
    * @pre none
    * @post none 
    */
@@ -150,6 +153,7 @@ public class WAVLTree {
    * @return the node with a key = nodeKey if it exists in the tree. 
    * otherwise, returns null.
    * @complexity O(log(n))
+   * @dependencies searchInsertionPlace - O(log(n))
    * @param nodeKey the key of the node you are searching for.
    * @pre none
    * @post none 
@@ -208,7 +212,7 @@ public class WAVLTree {
    * @pre none
    * @post none 
    */
-  private WAVLNode getSmallestNode()
+  public WAVLNode getSmallestNode()
   {
 	  if(empty())
 	  {
@@ -228,6 +232,7 @@ public class WAVLTree {
    * @return the number of rebalancing operations,
    * returns -1 if an item with key nodeKey already exists in the tree.
    * @complexity O(log(n))
+   * @dependencies - startNewRoot - O(1), searchInsertionPlace - O(log(n)), addNewLeaf - O(log(n))
    * @param nodeKey key of the new node
    * @param nodeInfo key of the new node
    * @pre none
@@ -249,7 +254,8 @@ public class WAVLTree {
     * private int addNewLeaf(WAVLNode parent, int nodeKey, String nodeInfo)
     * create a new leaf node with key k and info i under parent.
     * returns # of rebalances.
-    * @complexity O(1)
+    * @complexity O(log(n))
+    * @dependencies promote - O(log(n))
     * @param parent pointer to the new node parent.
     * @param nodeKey key of the new node
     * @param nodeInfo info of the new node
@@ -316,7 +322,7 @@ public class WAVLTree {
 				   innerNode=node.leftNode;
 			   }
 			   if((innerNode.rankDiff == 2) || (innerNode.isExternalLeaf())){		// needs single rotation.
-				   rebalanceCounter++;										
+				   rebalanceCounter+=2;										
 				   if(node.isLeftNode()){		//node became the parent.
 					   rotateRight(node.parentNode);  				
 					   fixRanksAfterRotate(node,node.rightNode);
@@ -327,7 +333,7 @@ public class WAVLTree {
 				   return rebalanceCounter;		//problem solved!
 				   
 			   }else{		// needs double rotation.
-				   rebalanceCounter+= 2;										
+				   rebalanceCounter+= 3;										
 				   if(node.isLeftNode()){
 					   node = doubleRotateLeftRight(node.parentNode);
 					   fixRanksAfterDoubleRotate(node,node.rightNode);
@@ -374,6 +380,7 @@ public class WAVLTree {
    * public int delete(int k)
    * deletes an item with key k from the binary tree, if it is there;
    * @complexity O(log(n))
+   * @dependencies searchNode(O(log(n)), deleteNode - O(log(n))
    * @return the number of rebalancing operations, 
    * returns -1 if an item with key k was not found in the tree.
    * @pre none
@@ -399,6 +406,7 @@ public class WAVLTree {
     * delete the node deleteNode from the WAVL tree.
     * @return the number of rebalancing operations.
     * @complexity  O(log(n))
+    * @dependencies deleteLeafNode - O(log(n)), deleteUnaryNode - O(log(n)), deleteJunctionNode - O(log(n))
     * @pre - deleteNode exists in the tree
     * @post - the tree doesn't have deleteNode anymore and is a valid WAVL tree.
     */
@@ -419,6 +427,7 @@ public class WAVLTree {
     * private int deleteJunctionNode(WAVLNode deleteNode)
     * delete the node deleteNode from the WAVL tree.
     * @complexity O(log(n))
+    * @dependencies deleteNode - O(log(n))
     * @return the number of rebalancing operations.
     * @pre tree.size!=0
     * && node is a junction node
@@ -434,6 +443,7 @@ public class WAVLTree {
     * private int deleteUnaryNode(WAVLNode deleteNode)
     * delete the node deleteNode from the WAVL tree.
     * @complexity O(log(n))
+    * @dependencies deleteLeafNode - O(log(n))
     * @return the number of rebalancing operations.
     * @pre tree.size!=0 
     * && node is an unary node
@@ -454,6 +464,7 @@ public class WAVLTree {
     * private int deleteLeafNode(WAVLNode deleteNode)
     * delete the node deleteNode from the WAVL tree.
     * @complexity O(log(n))
+    * @dependencies demote - O(log(n))
     * @return the number of rebalancing operations, or 0 if no rebalancing operations were needed.
     * @pre tree.size!=0 && node is a leaf
     * @post return number of rebalancing operations.
@@ -474,7 +485,6 @@ public class WAVLTree {
    /**
     * private void deleteLeafFromParent(WAVLNode deleteNode)
     * deletes the node deleteNode from the WAVL tree.
-    *
     * @complexity O(1)
     * @pre deleteNode is a leaf and not root.
 	* @post deleteNode was replaced as an emptyNode.
@@ -569,6 +579,7 @@ public class WAVLTree {
 			   if(nodeParent.isLeaf())
 			   {
 				   nodeParent.rankDiff = 2;
+				   rebalancingCounter++;
 			   }
 			   partnerNode_externalChild.rankDiff = 2; // partnerNode_externalChild is now one of topNode children
 			   return rebalancingCounter + 1;    
@@ -681,7 +692,7 @@ public class WAVLTree {
    * the WAVL tree is consisted from connection of WAVL nodes.
    *
    */
-  public class WAVLNode{
+   public class WAVLNode{
 	  WAVLNode parentNode;
 	  WAVLNode leftNode;
 	  WAVLNode rightNode;
@@ -792,8 +803,6 @@ public class WAVLTree {
 	  }
 	  
 	  /**
-	   * TODO what happens if we have only one node in the tree? is it ok to return itself? - 
-	   * TODO ^Ido: no. it should return null.
 	   * private WAVLNode getSuccessor()
 	   * Returns pointer of the first node with a bigger key then WAVL_Node.
 	   * @complexity O(log(n)), amortize time - O(1)
@@ -851,76 +860,76 @@ public class WAVLTree {
   }
 
   
-  // for testing:
-  
-	public boolean testTreeRanks()
-	{
-		if(!empty())
-		{
-			
-			 WAVLNode WAVL_tempNode = getSmallestNode();
-			 int counter = 0;
-			 int lastKey = WAVL_tempNode.key;
-			 while(counter<size-1){
-				 WAVL_tempNode=WAVL_tempNode.getSuccessor();
-				 if(lastKey>=WAVL_tempNode.key){
-					 System.out.println("Keys not in order ERROR");
-					 return false;
-				 }
-				 counter++;
-			 }
-			 if(WAVL_tempNode.getSuccessor()!=null){
-				 System.out.println("Size is not right");
-				 return false;
-			 }
-			 
-			 WAVL_tempNode = getSmallestNode();
-			 counter = 0;
-			 boolean passedThroughALeaf = false;
-			 int rank = 0;
-			 do{
-				 if (WAVL_tempNode.isLeaf())
-				 {
-					 if(passedThroughALeaf)
-					 {
-						 if(rank!=0){
-							 System.out.println("Ranks problem");
-							 return false;
-						 }
-					 }else{
-						 passedThroughALeaf=true;
-						 rank = 0;
-					 }
-				 }
-				 do{
-					 if(WAVL_tempNode.rightNode!=WAVL_emptyNode)
-				     {
-						WAVL_tempNode=WAVL_tempNode.rightNode;
-						rank -= WAVL_tempNode.rankDiff;
-						while(WAVL_tempNode.leftNode!=WAVL_emptyNode)
-						{
-							 WAVL_tempNode=WAVL_tempNode.leftNode;
-							 rank -= WAVL_tempNode.rankDiff;
-						}
-				      }else if(WAVL_tempNode.parentNode!=null){
-				    	  while(WAVL_tempNode.parentNode!=null && WAVL_tempNode ==WAVL_tempNode.parentNode.rightNode){
-				    		  rank += WAVL_tempNode.rankDiff;
-					    	  WAVL_tempNode=WAVL_tempNode.parentNode;
-				    	  }
-				    	  if(WAVL_tempNode.parentNode!=null)
-				    	  {
-				    		  rank += WAVL_tempNode.rankDiff;
-					    	  WAVL_tempNode=WAVL_tempNode.parentNode;
-				    	  }
-				      }
-					 counter++;
-				 }while((!WAVL_tempNode.isLeaf()) && counter<size);
-			 }while(counter<size);
-			 return true;
-		}else{
-			return true;
-		}
-	}
+//TODO delete  // for testing:
+//  
+//	public boolean testTreeRanks()
+//	{
+//		if(!empty())
+//		{
+//			
+//			 WAVLNode WAVL_tempNode = getSmallestNode();
+//			 int counter = 0;
+//			 int lastKey = WAVL_tempNode.key;
+//			 while(counter<size-1){
+//				 WAVL_tempNode=WAVL_tempNode.getSuccessor();
+//				 if(lastKey>=WAVL_tempNode.key){
+//					 System.out.println("Keys not in order ERROR");
+//					 return false;
+//				 }
+//				 counter++;
+//			 }
+//			 if(WAVL_tempNode.getSuccessor()!=null){
+//				 System.out.println("Size is not right");
+//				 return false;
+//			 }
+//			 
+//			 WAVL_tempNode = getSmallestNode();
+//			 counter = 0;
+//			 boolean passedThroughALeaf = false;
+//			 int rank = 0;
+//			 do{
+//				 if (WAVL_tempNode.isLeaf())
+//				 {
+//					 if(passedThroughALeaf)
+//					 {
+//						 if(rank!=0){
+//							 System.out.println("Ranks problem");
+//							 return false;
+//						 }
+//					 }else{
+//						 passedThroughALeaf=true;
+//						 rank = 0;
+//					 }
+//				 }
+//				 do{
+//					 if(WAVL_tempNode.rightNode!=WAVL_emptyNode)
+//				     {
+//						WAVL_tempNode=WAVL_tempNode.rightNode;
+//						rank -= WAVL_tempNode.rankDiff;
+//						while(WAVL_tempNode.leftNode!=WAVL_emptyNode)
+//						{
+//							 WAVL_tempNode=WAVL_tempNode.leftNode;
+//							 rank -= WAVL_tempNode.rankDiff;
+//						}
+//				      }else if(WAVL_tempNode.parentNode!=null){
+//				    	  while(WAVL_tempNode.parentNode!=null && WAVL_tempNode ==WAVL_tempNode.parentNode.rightNode){
+//				    		  rank += WAVL_tempNode.rankDiff;
+//					    	  WAVL_tempNode=WAVL_tempNode.parentNode;
+//				    	  }
+//				    	  if(WAVL_tempNode.parentNode!=null)
+//				    	  {
+//				    		  rank += WAVL_tempNode.rankDiff;
+//					    	  WAVL_tempNode=WAVL_tempNode.parentNode;
+//				    	  }
+//				      }
+//					 counter++;
+//				 }while((!WAVL_tempNode.isLeaf()) && counter<size);
+//			 }while(counter<size);
+//			 return true;
+//		}else{
+//			return true;
+//		}
+//	}
 }
   
 
