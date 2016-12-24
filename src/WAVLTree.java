@@ -1,15 +1,3 @@
-
-/* TODO 
-	1. check that the number of rebalancing actions is correct.
-	3. see if we can check the functions for more edge cases.
-	5. excel of actions.
-	7. delete test function in the end of the file.
-	9. after testing - change variables and functions to private/static when needed.
-	*/
-
-
-
-
 /**
  * WAVLTree
  *
@@ -212,7 +200,7 @@ public class WAVLTree {
    * @pre none
    * @post none 
    */
-  public WAVLNode getSmallestNode()
+  private WAVLNode getSmallestNode()
   {
 	  if(empty())
 	  {
@@ -471,7 +459,7 @@ public class WAVLTree {
     */
    private int deleteLeafNode(WAVLNode deleteNode){
 	   size --;
-	   int rebalancingCounter; 
+	   int rebalancingCounter=0; 
 	   WAVLNode deleteNodeParent;
 	   rebalancingCounter = demote(deleteNode) - 1; 	// change leaf rank from 0 to -1 and adjust WAVL tree.
 	   deleteNodeParent = deleteNode.parentNode;
@@ -527,7 +515,7 @@ public class WAVLTree {
    private int demote(WAVLNode node)
    {
 	   	int rebalancingCounter = 0;
-	    WAVLNode nodeParner,topNode,nodeParent,
+	    WAVLNode nodePartner,topNode,nodeParent,
 	    	partnerNode_externalChild,partnerNode_internalChild;
 	    
 	   	while(node!=WAVL_root){ // "In the end, it doesn't even matter"
@@ -538,22 +526,22 @@ public class WAVLTree {
 	   		}
 	   		
 			nodeParent = node.parentNode;
-	   		nodeParner = node.getPartner();
+	   		nodePartner = node.getPartner();
 						
 			// case 2: both node and partner node has rank difference 2
-			if(node.rankDiff == 2 && (nodeParner.rankDiff == 2 || nodeParner.isExternalLeaf())){
-				nodeParner.rankDiff = 1;
+			if(node.rankDiff == 2 && (nodePartner.rankDiff == 2 || nodePartner.isExternalLeaf())){
+				nodePartner.rankDiff = 1;
 				rebalancingCounter ++;
 				node = node.parentNode;
 				continue;
 			}
 			
 			if(node.isLeftNode()){
-				partnerNode_externalChild = nodeParner.rightNode;
-				partnerNode_internalChild = nodeParner.leftNode;
+				partnerNode_externalChild = nodePartner.rightNode;
+				partnerNode_internalChild = nodePartner.leftNode;
 			}else{
-				partnerNode_externalChild = nodeParner.leftNode;
-				partnerNode_internalChild = nodeParner.rightNode;
+				partnerNode_externalChild = nodePartner.leftNode;
+				partnerNode_internalChild = nodePartner.rightNode;
 			}
 			
 			//case 3: node is with rank difference 2, and partner with 1, with both of his children has rank difference 2.
@@ -858,78 +846,6 @@ public class WAVLTree {
 		  return WAVL_Node;
 	  }
   }
-
-  
-//TODO delete  // for testing:
-//  
-//	public boolean testTreeRanks()
-//	{
-//		if(!empty())
-//		{
-//			
-//			 WAVLNode WAVL_tempNode = getSmallestNode();
-//			 int counter = 0;
-//			 int lastKey = WAVL_tempNode.key;
-//			 while(counter<size-1){
-//				 WAVL_tempNode=WAVL_tempNode.getSuccessor();
-//				 if(lastKey>=WAVL_tempNode.key){
-//					 System.out.println("Keys not in order ERROR");
-//					 return false;
-//				 }
-//				 counter++;
-//			 }
-//			 if(WAVL_tempNode.getSuccessor()!=null){
-//				 System.out.println("Size is not right");
-//				 return false;
-//			 }
-//			 
-//			 WAVL_tempNode = getSmallestNode();
-//			 counter = 0;
-//			 boolean passedThroughALeaf = false;
-//			 int rank = 0;
-//			 do{
-//				 if (WAVL_tempNode.isLeaf())
-//				 {
-//					 if(passedThroughALeaf)
-//					 {
-//						 if(rank!=0){
-//							 System.out.println("Ranks problem");
-//							 return false;
-//						 }
-//					 }else{
-//						 passedThroughALeaf=true;
-//						 rank = 0;
-//					 }
-//				 }
-//				 do{
-//					 if(WAVL_tempNode.rightNode!=WAVL_emptyNode)
-//				     {
-//						WAVL_tempNode=WAVL_tempNode.rightNode;
-//						rank -= WAVL_tempNode.rankDiff;
-//						while(WAVL_tempNode.leftNode!=WAVL_emptyNode)
-//						{
-//							 WAVL_tempNode=WAVL_tempNode.leftNode;
-//							 rank -= WAVL_tempNode.rankDiff;
-//						}
-//				      }else if(WAVL_tempNode.parentNode!=null){
-//				    	  while(WAVL_tempNode.parentNode!=null && WAVL_tempNode ==WAVL_tempNode.parentNode.rightNode){
-//				    		  rank += WAVL_tempNode.rankDiff;
-//					    	  WAVL_tempNode=WAVL_tempNode.parentNode;
-//				    	  }
-//				    	  if(WAVL_tempNode.parentNode!=null)
-//				    	  {
-//				    		  rank += WAVL_tempNode.rankDiff;
-//					    	  WAVL_tempNode=WAVL_tempNode.parentNode;
-//				    	  }
-//				      }
-//					 counter++;
-//				 }while((!WAVL_tempNode.isLeaf()) && counter<size);
-//			 }while(counter<size);
-//			 return true;
-//		}else{
-//			return true;
-//		}
-//	}
 }
   
 
