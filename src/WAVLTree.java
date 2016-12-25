@@ -12,8 +12,8 @@ public class WAVLTree {
 	  
    /**
     * public int size()
-    * returns the number of nodes in the tree.
-    * time complexity: O(1)
+    * @return the number of nodes in the tree.
+    * @complexity: O(1)
     * @pre none
     * @post none
     */
@@ -24,8 +24,8 @@ public class WAVLTree {
 
    /**
    * public boolean empty()
-   * returns true if and only if the tree is empty
-   * time complexity: O(1)
+   * @return true if and only if the tree is empty
+   * @complexity: O(1)
    * @pre none
    * @post none
    */
@@ -45,7 +45,7 @@ public class WAVLTree {
   public String min()
   {
 	   if (empty()){
-		   return null;
+		   return null; // no values, so nothing to return
 	   }
 	   
 	   return getSmallestNode().info;
@@ -61,7 +61,9 @@ public class WAVLTree {
     */
   public String max()
   {
-	   if (empty()){return null;} // no values, so nothing to return
+	   if (empty()){
+		   return null;
+	   } // no values, so nothing to return
 	   
 	   WAVLNode WAVL_tempNode = WAVL_root;
 	   while(WAVL_tempNode.rightNode != WAVL_emptyNode){
@@ -95,7 +97,7 @@ public class WAVLTree {
    * @return a sorted array which contains all keys in the tree,
    * or an empty array if the tree is empty.
    * @complexity O(n)
-   * @dependencies getSmallestNode - O(log(n)), getSuccessor - O(log(n)) (amortize- O(1))
+   * @dependencies getSmallestNode - O(log(n)), getSuccessor - O(log(n)) (amortized- O(1))
    * @pre none
    * @post none 
    */
@@ -118,7 +120,7 @@ public class WAVLTree {
    * @return an array which contains the info of each key in the tree sorted respectively,
    * or an empty array if the tree is empty.
    * @complexity: O(n)
-   * @dependencies getSmallestNode - O(log(n)), getSuccessor - O(log(n)) (amortize- O(1))
+   * @dependencies getSmallestNode - O(log(n)), getSuccessor - O(log(n)) (amortized- O(1))
    * @pre none
    * @post none 
    */
@@ -159,8 +161,8 @@ public class WAVLTree {
   }
 
 /**
-   * private  WAVLNode searchInsertionPlace(int nodeKey)
-   * @return the node of an key nodeKey or where it should be added. 
+   * private WAVLNode searchInsertionPlace(int nodeKey)
+   * @return the node of a key nodeKey or where it should be added. 
    * if tree is empty, returns null.
    * @param nodeKey the key of the node you are searching for.
    * @complexity O(log(n))
@@ -240,7 +242,7 @@ public class WAVLTree {
 
 /**
     * private int addNewLeaf(WAVLNode parent, int nodeKey, String nodeInfo)
-    * create a new leaf node with key k and info i under parent.
+    * creates a new leaf node with key k and info i under parent.
     * returns # of rebalances.
     * @complexity O(log(n))
     * @dependencies promote - O(log(n))
@@ -340,6 +342,8 @@ public class WAVLTree {
 	 * private void fixRanksAfterRotate(WAVLNode newParent, WAVLNode lastParent)
 	 * fix ranks after rotate.
 	 * @complexity O(1)
+     * @param newParent WAVL node.
+     * @param lastParent WAVL node.
 	 * @pre none
 	 * @post node rank differences are correct now.
 	 */
@@ -354,7 +358,9 @@ public class WAVLTree {
     * private void fixRanksAfterDoubleRotate(WAVLNode newParent, WAVLNode lastParent)
     * fix ranks after double rotate.
 	* @complexity O(1)
-	* @pre old and new parent nodes.
+	* @param newParent WAVL node.
+    * @param lastParent WAVL node.
+	* @pre old and new parent nodes exists.
 	* @post node rank differences are correct now.    
     */
    private void fixRanksAfterDoubleRotate(WAVLNode newParent, WAVLNode lastParent){
@@ -366,9 +372,10 @@ public class WAVLTree {
    
 /**
    * public int delete(int k)
-   * deletes an item with key k from the binary tree, if it is there;
+   * deletes an item with key k from the binary tree, if it is there.
    * @complexity O(log(n))
    * @dependencies searchNode(O(log(n)), deleteNode - O(log(n))
+   * @param nodeKey, the key of the node we want to delete.
    * @return the number of rebalancing operations, 
    * returns -1 if an item with key k was not found in the tree.
    * @pre none
@@ -395,6 +402,7 @@ public class WAVLTree {
     * @return the number of rebalancing operations.
     * @complexity  O(log(n))
     * @dependencies deleteLeafNode - O(log(n)), deleteUnaryNode - O(log(n)), deleteJunctionNode - O(log(n))
+    * @param deleteNode, the node we want to delete.
     * @pre - deleteNode exists in the tree
     * @post - the tree doesn't have deleteNode anymore and is a valid WAVL tree.
     */
@@ -416,6 +424,7 @@ public class WAVLTree {
     * delete the node deleteNode from the WAVL tree.
     * @complexity O(log(n))
     * @dependencies deleteNode - O(log(n))
+    * @param deleteNode, the junction node we want to delete.
     * @return the number of rebalancing operations.
     * @pre tree.size!=0
     * && node is a junction node
@@ -431,7 +440,8 @@ public class WAVLTree {
     * private int deleteUnaryNode(WAVLNode deleteNode)
     * delete the node deleteNode from the WAVL tree.
     * @complexity O(log(n))
-    * @dependencies deleteLeafNode - O(log(n))
+    * @dependencies deleteLeafNode - O(log(n)), swap - O(1)
+    * @param deleteNode, the unary node we want to delete.
     * @return the number of rebalancing operations.
     * @pre tree.size!=0 
     * && node is an unary node
@@ -453,6 +463,7 @@ public class WAVLTree {
     * delete the node deleteNode from the WAVL tree.
     * @complexity O(log(n))
     * @dependencies demote - O(log(n))
+    * @param deleteNode, the leaf node we want to delete.
     * @return the number of rebalancing operations, or 0 if no rebalancing operations were needed.
     * @pre tree.size!=0 && node is a leaf
     * @post return number of rebalancing operations.
@@ -474,6 +485,7 @@ public class WAVLTree {
     * private void deleteLeafFromParent(WAVLNode deleteNode)
     * deletes the node deleteNode from the WAVL tree.
     * @complexity O(1)
+    * @param deleteNode, the leaf node we want to delete from the parent.
     * @pre deleteNode is a leaf and not root.
 	* @post deleteNode was replaced as an emptyNode.
     */
@@ -491,6 +503,8 @@ public class WAVLTree {
     * swap the nodes.
     *
     * @complexity  O(1)
+    * @param node1, one of the two nodes we want to swap.
+    * @param node2, one of the two nodes we want to swap..
     * @pre node1 and node2 are not null.
     * @post the two nodes were swapped.
     */
@@ -508,6 +522,7 @@ public class WAVLTree {
     * private static void demote(WAVLNode node)
     * demotes the node.
     * @complexity O(log(n))
+    * @param node, the node we want to demote.
     * @return how many rebalancing actions were taken.
     * @pre deleteNode is not null
     * @post the rank differences in the tree are correct now.
@@ -597,6 +612,7 @@ public class WAVLTree {
     * private WAVLNode rotateLeft(WAVLNode node)
     * performs a left rotation of the tree.
     * @complexity  O(1)
+    * @param node, the parent of the pivot node.
     * @pre receives the node which needs to be rotated down.
     * @post left rotation was done.
     */
@@ -625,6 +641,7 @@ public class WAVLTree {
     * private WAVLNode rotateRight(WAVLNode node)
     * performs a right rotation of the tree.
     * @complexity  O(1)
+    * @param node, the parent of the pivot node.
     * @pre receives the node which needs to be rotated down.
     * @post right rotation was done.
     */
@@ -653,6 +670,7 @@ public class WAVLTree {
     * private WAVLNode doubleRotateLeftRight(WAVLNode node)
     * performs a left rotation and then right rotation of the tree.
     * @complexity  O(1)
+    * @param node. we are double rotating the nodes around and include him.
     * @pre receives the node which needs to be rotated down.
     * @post double left right rotation was done.
     */
@@ -666,6 +684,7 @@ public class WAVLTree {
     * private WAVLNode doubleRotateRightLeft(WAVLNode node)
     * performs a right rotation and then left rotation of the tree.
     * @complexity  O(1)
+    * @param node. we are double rotating the nodes around and include him.
     * @pre receives the node which needs to be rotated down.
     * @post double right left rotation was done.
     */
@@ -689,6 +708,7 @@ public class WAVLTree {
 	  String info;  
 	  
 	  /**
+	   * public WAVLNode()
 	   * Constructor for WAVL node.
 	   */
 	  public WAVLNode(){
@@ -699,6 +719,8 @@ public class WAVLTree {
 	  }
 	  
 	  /**
+	   * public WAVLNode(WAVLNode parentnode, WAVLNode leftnode,
+			  WAVLNode rightnode, int rankdiff, int node_key, String node_info)
 	   * Constructor for WAVL node.
 	   */
 	  public WAVLNode(WAVLNode parentnode, WAVLNode leftnode,
@@ -714,7 +736,7 @@ public class WAVLTree {
 	  /**
 	  * public boolean isLeaf()
 	  * return true if Node has no children.
-	  * @complexity  O(1)
+	  * @complexity - O(1)
 	  * @pre - none.
 	  * @post - none.
 	  */
@@ -726,7 +748,7 @@ public class WAVLTree {
 	  /**
 	  * public boolean isUnary()
 	  * return true if Node has only one children
-	  * @complexity  O(1)
+	  * @complexity - O(1)
 	  * @pre - none.
 	  * @post - none.
 	  */
